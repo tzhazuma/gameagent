@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voyager Demo</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --panel: #0f172a;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --border: #1e293b;
+      --green: #22c55e;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --blue: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 15px/1.5 Inter, Segoe UI, Arial, sans-serif; background: linear-gradient(180deg, #020617 0%, #0f172a 100%); color: var(--text); }
+    main { max-width: 1380px; margin: 0 auto; padding: 32px; }
+    h1, h2 { margin: 0 0 12px; }
+    p { margin: 0 0 16px; color: var(--muted); }
+    .hero { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 24px 0; }
+    .card { background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 18px; padding: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+    .metric { font-size: 28px; font-weight: 700; color: white; }
+    .images { display: grid; gap: 16px; }
+    img { width: 100%; border-radius: 18px; border: 1px solid var(--border); background: #0b1220; }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 18px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.92); }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { color: white; background: rgba(30, 41, 59, 0.7); }
+    .status.completed { color: var(--green); font-weight: 700; }
+    .status.failed { color: var(--red); font-weight: 700; }
+    .status.missing { color: var(--muted); font-weight: 700; }
+    .notes { display: grid; gap: 16px; grid-template-columns: 1.2fr 1fr; margin-top: 16px; }
+    @media (max-width: 900px) { .notes { grid-template-columns: 1fr; } main { padding: 18px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Voyager Minecraft Demo</h1>
+    <p>This standalone page is generated from the real <code>ckpt_voyager</code> checkpoint. Replay Mod assets were not present in this workspace, so this repo now includes a checkpoint-driven visual demo that can be committed and shared directly.</p>
+    <div class="hero">
+      <div class="card"><div>Completed Tasks</div><div class="metric">27</div></div>
+      <div class="card"><div>Failed Tasks</div><div class="metric">3</div></div>
+      <div class="card"><div>Skills</div><div class="metric">28</div></div>
+      <div class="card"><div>Recorded Episodes</div><div class="metric">39</div></div>
+      <div class="card"><div>Recorded Time</div><div class="metric">14574t / 12m 09s</div></div>
+    </div>
+    <div class="images">
+      <img src="dashboard.svg" alt="Voyager dashboard" />
+      <img src="tasks.svg" alt="Voyager task timeline" />
+    </div>
+    <div class="notes">
+      <div class="card">
+        <h2>Official Tasks</h2>
+        <table>
+          <thead><tr><th>#</th><th>Task</th><th>Type</th><th>Status</th><th>Duration</th><th>Biome</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Mine 1 wood log</td><td>Mine</td><td class="status completed">completed</td><td>70t / 0m 04s</td><td>snowy_plains</td></tr>
+<tr><td>2</td><td>Mine 3 spruce_log</td><td>Mine</td><td class="status completed">completed</td><td>218t / 0m 11s</td><td>snowy_plains</td></tr>
+<tr><td>3</td><td>Craft 4 spruce_planks</td><td>Craft</td><td class="status completed">completed</td><td>114t / 0m 06s</td><td>frozen_ocean</td></tr>
+<tr><td>4</td><td>Craft 1 crafting_table</td><td>Craft</td><td class="status completed">completed</td><td>118t / 0m 06s</td><td>frozen_ocean</td></tr>
+<tr><td>5</td><td>Craft 8 spruce_planks</td><td>Craft</td><td class="status completed">completed</td><td>117t / 0m 06s</td><td>frozen_ocean</td></tr>
+<tr><td>6</td><td>Craft 1 wooden_pickaxe</td><td>Craft</td><td class="status completed">completed</td><td>103t / 0m 05s</td><td>frozen_ocean</td></tr>
+<tr><td>7</td><td>Mine 3 cobblestone</td><td>Mine</td><td class="status completed">completed</td><td>484t / 0m 24s</td><td>snowy_taiga</td></tr>
+<tr><td>8</td><td>Mine 1 coal_ore</td><td>Mine</td><td class="status completed">completed</td><td>531t / 0m 27s</td><td>snowy_taiga</td></tr>
+<tr><td>9</td><td>Craft 4 sticks</td><td>Craft</td><td class="status completed">completed</td><td>89t / 0m 04s</td><td>snowy_taiga</td></tr>
+<tr><td>10</td><td>Craft 1 stone_pickaxe</td><td>Craft</td><td class="status completed">completed</td><td>98t / 0m 05s</td><td>snowy_taiga</td></tr>
+<tr><td>11</td><td>Mine 1 copper_ore</td><td>Mine</td><td class="status completed">completed</td><td>407t / 0m 20s</td><td>snowy_taiga</td></tr>
+<tr><td>12</td><td>Mine 8 cobblestone</td><td>Mine</td><td class="status completed">completed</td><td>392t / 0m 20s</td><td>snowy_taiga</td></tr>
+<tr><td>13</td><td>Craft 1 furnace</td><td>Craft</td><td class="status completed">completed</td><td>87t / 0m 04s</td><td>snowy_taiga</td></tr>
+<tr><td>14</td><td>Smelt 4 raw_copper</td><td>Smelt</td><td class="status completed">completed</td><td>1062t / 0m 53s</td><td>snowy_taiga</td></tr>
+<tr><td>15</td><td>Mine 1 lapis_ore</td><td>Mine</td><td class="status completed">completed</td><td>214t / 0m 11s</td><td>snowy_taiga</td></tr>
+<tr><td>16</td><td>Mine 4 coal_ore</td><td>Mine</td><td class="status completed">completed</td><td>261t / 0m 13s</td><td>snowy_taiga</td></tr>
+<tr><td>17</td><td>Mine 1 iron_ore</td><td>Mine</td><td class="status completed">completed</td><td>427t / 0m 21s</td><td>snowy_taiga</td></tr>
+<tr><td>18</td><td>Craft 1 stone_sword</td><td>Craft</td><td class="status completed">completed</td><td>60t / 0m 03s</td><td>snowy_taiga</td></tr>
+<tr><td>19</td><td>Equip stone_sword</td><td>Equip</td><td class="status completed">completed</td><td>61t / 0m 03s</td><td>snowy_taiga</td></tr>
+<tr><td>20</td><td>Mine 2 iron_ore</td><td>Mine</td><td class="status completed">completed</td><td>202t / 0m 10s</td><td>snowy_taiga</td></tr>
+<tr><td>21</td><td>Smelt 3 raw_iron</td><td>Smelt</td><td class="status completed">completed</td><td>806t / 0m 40s</td><td>snowy_taiga</td></tr>
+<tr><td>22</td><td>Craft 1 iron pickaxe</td><td>Craft</td><td class="status completed">completed</td><td>72t / 0m 04s</td><td>snowy_taiga</td></tr>
+<tr><td>23</td><td>Mine 3 iron_ore</td><td>Mine</td><td class="status completed">completed</td><td>429t / 0m 21s</td><td>snowy_taiga</td></tr>
+<tr><td>24</td><td>Mine 4 iron_ore</td><td>Mine</td><td class="status completed">completed</td><td>151t / 0m 08s</td><td>snowy_taiga</td></tr>
+<tr><td>25</td><td>Smelt 4 raw_iron</td><td>Smelt</td><td class="status completed">completed</td><td>1068t / 0m 53s</td><td>snowy_taiga</td></tr>
+<tr><td>26</td><td>Craft 1 iron_boots</td><td>Craft</td><td class="status completed">completed</td><td>50t / 0m 02s</td><td>snowy_taiga</td></tr>
+<tr><td>27</td><td>Equip iron_boots</td><td>Equip</td><td class="status completed">completed</td><td>43t / 0m 02s</td><td>snowy_taiga</td></tr>
+<tr><td>28</td><td>Craft 12 spruce_planks</td><td>Craft</td><td class="status missing">missing</td><td>no saved event</td><td>n/a</td></tr>
+<tr><td>29</td><td>Mine 1 spruce_leaves</td><td>Mine</td><td class="status missing">missing</td><td>no saved event</td><td>n/a</td></tr>
+<tr><td>30</td><td>Kill 1 skeleton</td><td>Kill</td><td class="status failed">failed</td><td>1277t / 1m 04s</td><td>snowy_taiga</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Item Milestones</h2>
+        <table>
+          <thead><tr><th>Item</th><th>Episode</th><th>Reached At</th></tr></thead>
+          <tbody>
+            <tr><td>stick</td><td>Mine_1_wood_log</td><td>763t / 0m 38s</td></tr>
+<tr><td>spruce_sapling</td><td>Mine_1_wood_log</td><td>1073t / 0m 54s</td></tr>
+<tr><td>spruce_log</td><td>Mine_1_wood_log</td><td>1522t / 1m 16s</td></tr>
+<tr><td>spruce_planks</td><td>Craft_4_spruce_planks</td><td>1924t / 1m 36s</td></tr>
+<tr><td>crafting_table</td><td>Craft_1_crafting_table</td><td>2042t / 1m 42s</td></tr>
+<tr><td>wooden_pickaxe</td><td>Craft_1_wooden_pickaxe</td><td>2262t / 1m 53s</td></tr>
+<tr><td>cobblestone</td><td>Mine_3_cobblestone</td><td>4834t / 4m 02s</td></tr>
+<tr><td>dirt</td><td>Mine_3_cobblestone</td><td>4834t / 4m 02s</td></tr>
+<tr><td>coal</td><td>Mine_1_coal_ore</td><td>5365t / 4m 28s</td></tr>
+<tr><td>stone_pickaxe</td><td>Craft_1_stone_pickaxe</td><td>5552t / 4m 38s</td></tr>
+<tr><td>raw_copper</td><td>Mine_1_copper_ore</td><td>5959t / 4m 58s</td></tr>
+<tr><td>furnace</td><td>Craft_1_furnace</td><td>6438t / 5m 22s</td></tr>
+<tr><td>copper_ingot</td><td>Smelt_4_raw_copper</td><td>7500t / 6m 15s</td></tr>
+<tr><td>lapis_lazuli</td><td>Mine_1_lapis_ore</td><td>7946t / 6m 37s</td></tr>
+<tr><td>raw_iron</td><td>Mine_1_iron_ore</td><td>8634t / 7m 12s</td></tr>
+<tr><td>stone_sword</td><td>Craft_1_stone_sword</td><td>8694t / 7m 15s</td></tr>
+<tr><td>iron_ingot</td><td>Smelt_3_raw_iron</td><td>9763t / 8m 08s</td></tr>
+<tr><td>iron_pickaxe</td><td>Craft_1_iron_pickaxe</td><td>9835t / 8m 12s</td></tr>
+<tr><td>iron_boots</td><td>Craft_1_iron_boots</td><td>11533t / 9m 37s</td></tr>
+<tr><td>andesite</td><td>Mine_3_iron_ore</td><td>12282t / 10m 14s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

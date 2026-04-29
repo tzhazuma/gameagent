@@ -6,6 +6,21 @@
 
 `report.pdf` 是对应的 LaTeX 实验报告，源码在 `report.tex`。
 
+## 可视化演示
+
+检查结果：当前仓库和本机 `~/.minecraft/mods` 中都没有 Replay Mod，也没有已生成的 `.mcpr`、视频或截图产物，因此这个分支现在补了一条不依赖 Replay Mod 的可视化导出链路。
+
+- 生成脚本：`generate_demo.py`
+- 运行命令：`./venv/bin/python generate_demo.py`
+- 演示页面：`demo/index.html`
+- GitHub 可直接查看的静态图：`demo/dashboard.svg`、`demo/tasks.svg`
+
+下面这两张图来自当前真实 checkpoint 自动导出：
+
+![Voyager demo dashboard](demo/dashboard.svg)
+
+![Voyager demo tasks](demo/tasks.svg)
+
 ## 项目目标
 
 - 在真实 Minecraft LAN 世界中持续运行 Voyager，而不是只做离线分析。

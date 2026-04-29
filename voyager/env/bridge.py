@@ -51,9 +51,11 @@ class VoyagerEnv(gym.Env):
         self.server_paused = False
         self.pause_enabled = os.environ.get("VOYAGER_ENABLE_PAUSE") == "1"
 
-    def _post(self, path, payload=None):
+    def _post(self, path, payload=None, timeout=None):
         return self.session.post(
-            f"{self.server}{path}", json=payload, timeout=self.request_timeout
+            f"{self.server}{path}",
+            json=payload,
+            timeout=self.request_timeout if timeout is None else timeout,
         )
 
     def get_mineflayer_process(self, server_port):
@@ -144,7 +146,9 @@ class VoyagerEnv(gym.Env):
             self.check_process()
             self.unpause()
             try:
-                res = self._post("/step", data)
+                # Step handlers can spend almost the full action timeout inside
+                # mineflayer before emitting a final observation or error.
+                res = self._post("/step", data, timeout=self.request_timeout + 30)
                 if res.status_code == 200:
                     returned_data = res.json()
                     self.pause()

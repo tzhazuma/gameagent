@@ -1,0 +1,1194 @@
+{
+  "generated_at": "2026-04-29T05:17:21.775560+00:00",
+  "summary": {
+    "completed_tasks": 27,
+    "failed_tasks": 3,
+    "official_tasks": 30,
+    "skills": 28,
+    "recorded_episodes": 39,
+    "recorded_ticks": 14574,
+    "recorded_ticks_label": "14574t / 12m 09s",
+    "biomes": [
+      "frozen_ocean",
+      "snowy_plains",
+      "snowy_taiga",
+      "windswept_forest"
+    ],
+    "official_snapshots": 28,
+    "off_path_unique_tasks": [
+      "Mine_1_magma_block",
+      "Mine_3_stone"
+    ]
+  },
+  "official_tasks": [
+    {
+      "index": 1,
+      "name": "Mine 1 wood log",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 70,
+      "duration_label": "70t / 0m 04s",
+      "biome": "snowy_plains",
+      "time_of_day": "noon",
+      "position": {
+        "x": 196.4918287425388,
+        "z": -142.5
+      },
+      "timestamp": "2026-04-29T02:41:14",
+      "source_file": "Mine_1_wood_log_20260429_024114"
+    },
+    {
+      "index": 2,
+      "name": "Mine 3 spruce_log",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 218,
+      "duration_label": "218t / 0m 11s",
+      "biome": "snowy_plains",
+      "time_of_day": "noon",
+      "position": {
+        "x": 196.4918287425388,
+        "z": -142.5
+      },
+      "timestamp": "2026-04-29T02:44:09",
+      "source_file": "Mine_3_spruce_log_20260429_024409"
+    },
+    {
+      "index": 3,
+      "name": "Craft 4 spruce_planks",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 114,
+      "duration_label": "114t / 0m 06s",
+      "biome": "frozen_ocean",
+      "time_of_day": "sunrise",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:17:19",
+      "source_file": "Craft_4_spruce_planks_20260429_041719"
+    },
+    {
+      "index": 4,
+      "name": "Craft 1 crafting_table",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 118,
+      "duration_label": "118t / 0m 06s",
+      "biome": "frozen_ocean",
+      "time_of_day": "day",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:22:18",
+      "source_file": "Craft_1_crafting_table_20260429_042218"
+    },
+    {
+      "index": 5,
+      "name": "Craft 8 spruce_planks",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 117,
+      "duration_label": "117t / 0m 06s",
+      "biome": "frozen_ocean",
+      "time_of_day": "day",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:27:01",
+      "source_file": "Craft_8_spruce_planks_20260429_042701"
+    },
+    {
+      "index": 6,
+      "name": "Craft 1 wooden_pickaxe",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 103,
+      "duration_label": "103t / 0m 05s",
+      "biome": "frozen_ocean",
+      "time_of_day": "day",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:33:07",
+      "source_file": "Craft_1_wooden_pickaxe_20260429_043307"
+    },
+    {
+      "index": 7,
+      "name": "Mine 3 cobblestone",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 484,
+      "duration_label": "484t / 0m 24s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 352.39695708172343,
+        "z": -255.50000000000026
+      },
+      "timestamp": "2026-04-29T05:12:02",
+      "source_file": "Mine_3_cobblestone_20260429_051202"
+    },
+    {
+      "index": 8,
+      "name": "Mine 1 coal_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 531,
+      "duration_label": "531t / 0m 27s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 351.4993901715756,
+        "z": -261.3
+      },
+      "timestamp": "2026-04-29T05:17:34",
+      "source_file": "Mine_1_coal_ore_20260429_051734"
+    },
+    {
+      "index": 9,
+      "name": "Craft 4 sticks",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 89,
+      "duration_label": "89t / 0m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 351.4993901715756,
+        "z": -261.3
+      },
+      "timestamp": "2026-04-29T05:25:08",
+      "source_file": "Craft_4_sticks_20260429_052508"
+    },
+    {
+      "index": 10,
+      "name": "Craft 1 stone_pickaxe",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 98,
+      "duration_label": "98t / 0m 05s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 351.4993901715756,
+        "z": -261.3
+      },
+      "timestamp": "2026-04-29T05:32:15",
+      "source_file": "Craft_1_stone_pickaxe_20260429_053215"
+    },
+    {
+      "index": 11,
+      "name": "Mine 1 copper_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 407,
+      "duration_label": "407t / 0m 20s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 346.3,
+        "z": -266.621454025105
+      },
+      "timestamp": "2026-04-29T05:35:44",
+      "source_file": "Mine_1_copper_ore_20260429_053544"
+    },
+    {
+      "index": 12,
+      "name": "Mine 8 cobblestone",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 392,
+      "duration_label": "392t / 0m 20s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.60157841240243,
+        "z": -265.5
+      },
+      "timestamp": "2026-04-29T05:38:39",
+      "source_file": "Mine_8_cobblestone_20260429_053839"
+    },
+    {
+      "index": 13,
+      "name": "Craft 1 furnace",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 87,
+      "duration_label": "87t / 0m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "sunset",
+      "position": {
+        "x": 347.60157841240243,
+        "z": -265.5
+      },
+      "timestamp": "2026-04-29T05:41:29",
+      "source_file": "Craft_1_furnace_20260429_054129"
+    },
+    {
+      "index": 14,
+      "name": "Smelt 4 raw_copper",
+      "category": "Smelt",
+      "status": "completed",
+      "duration_ticks": 1062,
+      "duration_label": "1062t / 0m 53s",
+      "biome": "snowy_taiga",
+      "time_of_day": "night",
+      "position": {
+        "x": 347.60157841240243,
+        "z": -265.5
+      },
+      "timestamp": "2026-04-29T05:50:18",
+      "source_file": "Smelt_4_raw_copper_20260429_055018"
+    },
+    {
+      "index": 15,
+      "name": "Mine 1 lapis_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 214,
+      "duration_label": "214t / 0m 11s",
+      "biome": "snowy_taiga",
+      "time_of_day": "night",
+      "position": {
+        "x": 348.5154514549526,
+        "z": -263.4224778563171
+      },
+      "timestamp": "2026-04-29T05:56:44",
+      "source_file": "Mine_1_lapis_ore_20260429_055644"
+    },
+    {
+      "index": 16,
+      "name": "Mine 4 coal_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 261,
+      "duration_label": "261t / 0m 13s",
+      "biome": "snowy_taiga",
+      "time_of_day": "midnight",
+      "position": {
+        "x": 349.6453055486695,
+        "z": -264.5000001017861
+      },
+      "timestamp": "2026-04-29T06:12:37",
+      "source_file": "Mine_4_coal_ore_20260429_061237"
+    },
+    {
+      "index": 17,
+      "name": "Mine 1 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 427,
+      "duration_label": "427t / 0m 21s",
+      "biome": "snowy_taiga",
+      "time_of_day": "midnight",
+      "position": {
+        "x": 344.4759925143155,
+        "z": -265.5019025502094
+      },
+      "timestamp": "2026-04-29T06:23:36",
+      "source_file": "Mine_1_iron_ore_20260429_062336"
+    },
+    {
+      "index": 18,
+      "name": "Craft 1 stone_sword",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 60,
+      "duration_label": "60t / 0m 03s",
+      "biome": "snowy_taiga",
+      "time_of_day": "sunrise",
+      "position": {
+        "x": 344.4759925143155,
+        "z": -265.5019025502094
+      },
+      "timestamp": "2026-04-29T06:34:42",
+      "source_file": "Craft_1_stone_sword_20260429_063442"
+    },
+    {
+      "index": 19,
+      "name": "Equip stone_sword",
+      "category": "Equip",
+      "status": "completed",
+      "duration_ticks": 61,
+      "duration_label": "61t / 0m 03s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.4759925143155,
+        "z": -265.5019025502094
+      },
+      "timestamp": "2026-04-29T06:43:49",
+      "source_file": "Equip_stone_sword_20260429_064349"
+    },
+    {
+      "index": 20,
+      "name": "Mine 2 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 202,
+      "duration_label": "202t / 0m 10s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.48966562970577,
+        "z": -264.6872014582873
+      },
+      "timestamp": "2026-04-29T06:51:05",
+      "source_file": "Mine_2_iron_ore_20260429_065105"
+    },
+    {
+      "index": 21,
+      "name": "Smelt 3 raw_iron",
+      "category": "Smelt",
+      "status": "completed",
+      "duration_ticks": 806,
+      "duration_label": "806t / 0m 40s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.48966562970577,
+        "z": -264.6872014582873
+      },
+      "timestamp": "2026-04-29T07:04:19",
+      "source_file": "Smelt_3_raw_iron_20260429_070419"
+    },
+    {
+      "index": 22,
+      "name": "Craft 1 iron pickaxe",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 72,
+      "duration_label": "72t / 0m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.48966562970577,
+        "z": -264.6872014582873
+      },
+      "timestamp": "2026-04-29T07:12:16",
+      "source_file": "Craft_1_iron_pickaxe_20260429_071216"
+    },
+    {
+      "index": 23,
+      "name": "Mine 3 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 429,
+      "duration_label": "429t / 0m 21s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 346.7,
+        "z": -264.3
+      },
+      "timestamp": "2026-04-29T07:24:05",
+      "source_file": "Mine_3_iron_ore_20260429_072405"
+    },
+    {
+      "index": 24,
+      "name": "Mine 4 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 151,
+      "duration_label": "151t / 0m 08s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T07:38:28",
+      "source_file": "Mine_4_iron_ore_20260429_073828"
+    },
+    {
+      "index": 25,
+      "name": "Smelt 4 raw_iron",
+      "category": "Smelt",
+      "status": "completed",
+      "duration_ticks": 1068,
+      "duration_label": "1068t / 0m 53s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T07:45:40",
+      "source_file": "Smelt_4_raw_iron_20260429_074540"
+    },
+    {
+      "index": 26,
+      "name": "Craft 1 iron_boots",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 50,
+      "duration_label": "50t / 0m 02s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T07:56:23",
+      "source_file": "Craft_1_iron_boots_20260429_075623"
+    },
+    {
+      "index": 27,
+      "name": "Equip iron_boots",
+      "category": "Equip",
+      "status": "completed",
+      "duration_ticks": 43,
+      "duration_label": "43t / 0m 02s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T08:04:44",
+      "source_file": "Equip_iron_boots_20260429_080444"
+    },
+    {
+      "index": 28,
+      "name": "Craft 12 spruce_planks",
+      "category": "Craft",
+      "status": "missing",
+      "duration_ticks": 0,
+      "duration_label": "no saved event",
+      "biome": "n/a",
+      "time_of_day": "n/a",
+      "position": null,
+      "timestamp": null,
+      "source_file": null
+    },
+    {
+      "index": 29,
+      "name": "Mine 1 spruce_leaves",
+      "category": "Mine",
+      "status": "missing",
+      "duration_ticks": 0,
+      "duration_label": "no saved event",
+      "biome": "n/a",
+      "time_of_day": "n/a",
+      "position": null,
+      "timestamp": null,
+      "source_file": null
+    },
+    {
+      "index": 30,
+      "name": "Kill 1 skeleton",
+      "category": "Kill",
+      "status": "failed",
+      "duration_ticks": 1277,
+      "duration_label": "1277t / 1m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 299.6418993428297,
+        "z": -582.7
+      },
+      "timestamp": "2026-04-29T08:42:54",
+      "source_file": "Kill_1_skeleton_20260429_084254"
+    }
+  ],
+  "route": [
+    {
+      "index": 1,
+      "name": "Mine 1 wood log",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 70,
+      "duration_label": "70t / 0m 04s",
+      "biome": "snowy_plains",
+      "time_of_day": "noon",
+      "position": {
+        "x": 196.4918287425388,
+        "z": -142.5
+      },
+      "timestamp": "2026-04-29T02:41:14",
+      "source_file": "Mine_1_wood_log_20260429_024114"
+    },
+    {
+      "index": 2,
+      "name": "Mine 3 spruce_log",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 218,
+      "duration_label": "218t / 0m 11s",
+      "biome": "snowy_plains",
+      "time_of_day": "noon",
+      "position": {
+        "x": 196.4918287425388,
+        "z": -142.5
+      },
+      "timestamp": "2026-04-29T02:44:09",
+      "source_file": "Mine_3_spruce_log_20260429_024409"
+    },
+    {
+      "index": 3,
+      "name": "Craft 4 spruce_planks",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 114,
+      "duration_label": "114t / 0m 06s",
+      "biome": "frozen_ocean",
+      "time_of_day": "sunrise",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:17:19",
+      "source_file": "Craft_4_spruce_planks_20260429_041719"
+    },
+    {
+      "index": 4,
+      "name": "Craft 1 crafting_table",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 118,
+      "duration_label": "118t / 0m 06s",
+      "biome": "frozen_ocean",
+      "time_of_day": "day",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:22:18",
+      "source_file": "Craft_1_crafting_table_20260429_042218"
+    },
+    {
+      "index": 5,
+      "name": "Craft 8 spruce_planks",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 117,
+      "duration_label": "117t / 0m 06s",
+      "biome": "frozen_ocean",
+      "time_of_day": "day",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:27:01",
+      "source_file": "Craft_8_spruce_planks_20260429_042701"
+    },
+    {
+      "index": 6,
+      "name": "Craft 1 wooden_pickaxe",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 103,
+      "duration_label": "103t / 0m 05s",
+      "biome": "frozen_ocean",
+      "time_of_day": "day",
+      "position": {
+        "x": 592.5,
+        "z": 32.5
+      },
+      "timestamp": "2026-04-29T04:33:07",
+      "source_file": "Craft_1_wooden_pickaxe_20260429_043307"
+    },
+    {
+      "index": 7,
+      "name": "Mine 3 cobblestone",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 484,
+      "duration_label": "484t / 0m 24s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 352.39695708172343,
+        "z": -255.50000000000026
+      },
+      "timestamp": "2026-04-29T05:12:02",
+      "source_file": "Mine_3_cobblestone_20260429_051202"
+    },
+    {
+      "index": 8,
+      "name": "Mine 1 coal_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 531,
+      "duration_label": "531t / 0m 27s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 351.4993901715756,
+        "z": -261.3
+      },
+      "timestamp": "2026-04-29T05:17:34",
+      "source_file": "Mine_1_coal_ore_20260429_051734"
+    },
+    {
+      "index": 9,
+      "name": "Craft 4 sticks",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 89,
+      "duration_label": "89t / 0m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 351.4993901715756,
+        "z": -261.3
+      },
+      "timestamp": "2026-04-29T05:25:08",
+      "source_file": "Craft_4_sticks_20260429_052508"
+    },
+    {
+      "index": 10,
+      "name": "Craft 1 stone_pickaxe",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 98,
+      "duration_label": "98t / 0m 05s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 351.4993901715756,
+        "z": -261.3
+      },
+      "timestamp": "2026-04-29T05:32:15",
+      "source_file": "Craft_1_stone_pickaxe_20260429_053215"
+    },
+    {
+      "index": 11,
+      "name": "Mine 1 copper_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 407,
+      "duration_label": "407t / 0m 20s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 346.3,
+        "z": -266.621454025105
+      },
+      "timestamp": "2026-04-29T05:35:44",
+      "source_file": "Mine_1_copper_ore_20260429_053544"
+    },
+    {
+      "index": 12,
+      "name": "Mine 8 cobblestone",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 392,
+      "duration_label": "392t / 0m 20s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.60157841240243,
+        "z": -265.5
+      },
+      "timestamp": "2026-04-29T05:38:39",
+      "source_file": "Mine_8_cobblestone_20260429_053839"
+    },
+    {
+      "index": 13,
+      "name": "Craft 1 furnace",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 87,
+      "duration_label": "87t / 0m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "sunset",
+      "position": {
+        "x": 347.60157841240243,
+        "z": -265.5
+      },
+      "timestamp": "2026-04-29T05:41:29",
+      "source_file": "Craft_1_furnace_20260429_054129"
+    },
+    {
+      "index": 14,
+      "name": "Smelt 4 raw_copper",
+      "category": "Smelt",
+      "status": "completed",
+      "duration_ticks": 1062,
+      "duration_label": "1062t / 0m 53s",
+      "biome": "snowy_taiga",
+      "time_of_day": "night",
+      "position": {
+        "x": 347.60157841240243,
+        "z": -265.5
+      },
+      "timestamp": "2026-04-29T05:50:18",
+      "source_file": "Smelt_4_raw_copper_20260429_055018"
+    },
+    {
+      "index": 15,
+      "name": "Mine 1 lapis_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 214,
+      "duration_label": "214t / 0m 11s",
+      "biome": "snowy_taiga",
+      "time_of_day": "night",
+      "position": {
+        "x": 348.5154514549526,
+        "z": -263.4224778563171
+      },
+      "timestamp": "2026-04-29T05:56:44",
+      "source_file": "Mine_1_lapis_ore_20260429_055644"
+    },
+    {
+      "index": 16,
+      "name": "Mine 4 coal_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 261,
+      "duration_label": "261t / 0m 13s",
+      "biome": "snowy_taiga",
+      "time_of_day": "midnight",
+      "position": {
+        "x": 349.6453055486695,
+        "z": -264.5000001017861
+      },
+      "timestamp": "2026-04-29T06:12:37",
+      "source_file": "Mine_4_coal_ore_20260429_061237"
+    },
+    {
+      "index": 17,
+      "name": "Mine 1 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 427,
+      "duration_label": "427t / 0m 21s",
+      "biome": "snowy_taiga",
+      "time_of_day": "midnight",
+      "position": {
+        "x": 344.4759925143155,
+        "z": -265.5019025502094
+      },
+      "timestamp": "2026-04-29T06:23:36",
+      "source_file": "Mine_1_iron_ore_20260429_062336"
+    },
+    {
+      "index": 18,
+      "name": "Craft 1 stone_sword",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 60,
+      "duration_label": "60t / 0m 03s",
+      "biome": "snowy_taiga",
+      "time_of_day": "sunrise",
+      "position": {
+        "x": 344.4759925143155,
+        "z": -265.5019025502094
+      },
+      "timestamp": "2026-04-29T06:34:42",
+      "source_file": "Craft_1_stone_sword_20260429_063442"
+    },
+    {
+      "index": 19,
+      "name": "Equip stone_sword",
+      "category": "Equip",
+      "status": "completed",
+      "duration_ticks": 61,
+      "duration_label": "61t / 0m 03s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.4759925143155,
+        "z": -265.5019025502094
+      },
+      "timestamp": "2026-04-29T06:43:49",
+      "source_file": "Equip_stone_sword_20260429_064349"
+    },
+    {
+      "index": 20,
+      "name": "Mine 2 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 202,
+      "duration_label": "202t / 0m 10s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.48966562970577,
+        "z": -264.6872014582873
+      },
+      "timestamp": "2026-04-29T06:51:05",
+      "source_file": "Mine_2_iron_ore_20260429_065105"
+    },
+    {
+      "index": 21,
+      "name": "Smelt 3 raw_iron",
+      "category": "Smelt",
+      "status": "completed",
+      "duration_ticks": 806,
+      "duration_label": "806t / 0m 40s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.48966562970577,
+        "z": -264.6872014582873
+      },
+      "timestamp": "2026-04-29T07:04:19",
+      "source_file": "Smelt_3_raw_iron_20260429_070419"
+    },
+    {
+      "index": 22,
+      "name": "Craft 1 iron pickaxe",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 72,
+      "duration_label": "72t / 0m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 344.48966562970577,
+        "z": -264.6872014582873
+      },
+      "timestamp": "2026-04-29T07:12:16",
+      "source_file": "Craft_1_iron_pickaxe_20260429_071216"
+    },
+    {
+      "index": 23,
+      "name": "Mine 3 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 429,
+      "duration_label": "429t / 0m 21s",
+      "biome": "snowy_taiga",
+      "time_of_day": "day",
+      "position": {
+        "x": 346.7,
+        "z": -264.3
+      },
+      "timestamp": "2026-04-29T07:24:05",
+      "source_file": "Mine_3_iron_ore_20260429_072405"
+    },
+    {
+      "index": 24,
+      "name": "Mine 4 iron_ore",
+      "category": "Mine",
+      "status": "completed",
+      "duration_ticks": 151,
+      "duration_label": "151t / 0m 08s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T07:38:28",
+      "source_file": "Mine_4_iron_ore_20260429_073828"
+    },
+    {
+      "index": 25,
+      "name": "Smelt 4 raw_iron",
+      "category": "Smelt",
+      "status": "completed",
+      "duration_ticks": 1068,
+      "duration_label": "1068t / 0m 53s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T07:45:40",
+      "source_file": "Smelt_4_raw_iron_20260429_074540"
+    },
+    {
+      "index": 26,
+      "name": "Craft 1 iron_boots",
+      "category": "Craft",
+      "status": "completed",
+      "duration_ticks": 50,
+      "duration_label": "50t / 0m 02s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T07:56:23",
+      "source_file": "Craft_1_iron_boots_20260429_075623"
+    },
+    {
+      "index": 27,
+      "name": "Equip iron_boots",
+      "category": "Equip",
+      "status": "completed",
+      "duration_ticks": 43,
+      "duration_label": "43t / 0m 02s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 347.5,
+        "z": -264.43575413833634
+      },
+      "timestamp": "2026-04-29T08:04:44",
+      "source_file": "Equip_iron_boots_20260429_080444"
+    },
+    {
+      "index": 30,
+      "name": "Kill 1 skeleton",
+      "category": "Kill",
+      "status": "failed",
+      "duration_ticks": 1277,
+      "duration_label": "1277t / 1m 04s",
+      "biome": "snowy_taiga",
+      "time_of_day": "noon",
+      "position": {
+        "x": 299.6418993428297,
+        "z": -582.7
+      },
+      "timestamp": "2026-04-29T08:42:54",
+      "source_file": "Kill_1_skeleton_20260429_084254"
+    }
+  ],
+  "latest_snapshot": {
+    "biome": "snowy_taiga",
+    "time_of_day": "noon",
+    "position": {
+      "x": 299.6418993428297,
+      "z": -582.7
+    },
+    "health": 20,
+    "food": 19,
+    "equipment": [
+      null,
+      null,
+      null,
+      "iron_boots",
+      "stone_sword",
+      null
+    ],
+    "inventory": [
+      [
+        "cobblestone",
+        66
+      ],
+      [
+        "dirt",
+        6
+      ],
+      [
+        "lapis_lazuli",
+        6
+      ],
+      [
+        "raw_iron",
+        5
+      ],
+      [
+        "copper_ingot",
+        4
+      ],
+      [
+        "granite",
+        4
+      ],
+      [
+        "andesite",
+        3
+      ],
+      [
+        "spruce_planks",
+        3
+      ],
+      [
+        "coal",
+        2
+      ],
+      [
+        "crafting_table",
+        1
+      ],
+      [
+        "diorite",
+        1
+      ],
+      [
+        "furnace",
+        1
+      ],
+      [
+        "iron_pickaxe",
+        1
+      ],
+      [
+        "spruce_sapling",
+        1
+      ],
+      [
+        "stone_pickaxe",
+        1
+      ],
+      [
+        "stone_sword",
+        1
+      ],
+      [
+        "wooden_pickaxe",
+        1
+      ]
+    ],
+    "source_file": "Kill_1_skeleton_20260429_084254"
+  },
+  "item_milestones": [
+    {
+      "item": "stick",
+      "task_key": "Mine_1_wood_log",
+      "ticks": 763,
+      "label": "763t / 0m 38s",
+      "source_file": "Mine_1_wood_log_20260429_020035"
+    },
+    {
+      "item": "spruce_sapling",
+      "task_key": "Mine_1_wood_log",
+      "ticks": 1073,
+      "label": "1073t / 0m 54s",
+      "source_file": "Mine_1_wood_log_20260429_020416"
+    },
+    {
+      "item": "spruce_log",
+      "task_key": "Mine_1_wood_log",
+      "ticks": 1522,
+      "label": "1522t / 1m 16s",
+      "source_file": "Mine_1_wood_log_20260429_020820"
+    },
+    {
+      "item": "spruce_planks",
+      "task_key": "Craft_4_spruce_planks",
+      "ticks": 1924,
+      "label": "1924t / 1m 36s",
+      "source_file": "Craft_4_spruce_planks_20260429_041719"
+    },
+    {
+      "item": "crafting_table",
+      "task_key": "Craft_1_crafting_table",
+      "ticks": 2042,
+      "label": "2042t / 1m 42s",
+      "source_file": "Craft_1_crafting_table_20260429_042218"
+    },
+    {
+      "item": "wooden_pickaxe",
+      "task_key": "Craft_1_wooden_pickaxe",
+      "ticks": 2262,
+      "label": "2262t / 1m 53s",
+      "source_file": "Craft_1_wooden_pickaxe_20260429_043307"
+    },
+    {
+      "item": "cobblestone",
+      "task_key": "Mine_3_cobblestone",
+      "ticks": 4834,
+      "label": "4834t / 4m 02s",
+      "source_file": "Mine_3_cobblestone_20260429_051202"
+    },
+    {
+      "item": "dirt",
+      "task_key": "Mine_3_cobblestone",
+      "ticks": 4834,
+      "label": "4834t / 4m 02s",
+      "source_file": "Mine_3_cobblestone_20260429_051202"
+    },
+    {
+      "item": "coal",
+      "task_key": "Mine_1_coal_ore",
+      "ticks": 5365,
+      "label": "5365t / 4m 28s",
+      "source_file": "Mine_1_coal_ore_20260429_051734"
+    },
+    {
+      "item": "stone_pickaxe",
+      "task_key": "Craft_1_stone_pickaxe",
+      "ticks": 5552,
+      "label": "5552t / 4m 38s",
+      "source_file": "Craft_1_stone_pickaxe_20260429_053215"
+    },
+    {
+      "item": "raw_copper",
+      "task_key": "Mine_1_copper_ore",
+      "ticks": 5959,
+      "label": "5959t / 4m 58s",
+      "source_file": "Mine_1_copper_ore_20260429_053544"
+    },
+    {
+      "item": "furnace",
+      "task_key": "Craft_1_furnace",
+      "ticks": 6438,
+      "label": "6438t / 5m 22s",
+      "source_file": "Craft_1_furnace_20260429_054129"
+    },
+    {
+      "item": "copper_ingot",
+      "task_key": "Smelt_4_raw_copper",
+      "ticks": 7500,
+      "label": "7500t / 6m 15s",
+      "source_file": "Smelt_4_raw_copper_20260429_055018"
+    },
+    {
+      "item": "lapis_lazuli",
+      "task_key": "Mine_1_lapis_ore",
+      "ticks": 7946,
+      "label": "7946t / 6m 37s",
+      "source_file": "Mine_1_lapis_ore_20260429_055644"
+    },
+    {
+      "item": "raw_iron",
+      "task_key": "Mine_1_iron_ore",
+      "ticks": 8634,
+      "label": "8634t / 7m 12s",
+      "source_file": "Mine_1_iron_ore_20260429_062336"
+    },
+    {
+      "item": "stone_sword",
+      "task_key": "Craft_1_stone_sword",
+      "ticks": 8694,
+      "label": "8694t / 7m 15s",
+      "source_file": "Craft_1_stone_sword_20260429_063442"
+    },
+    {
+      "item": "iron_ingot",
+      "task_key": "Smelt_3_raw_iron",
+      "ticks": 9763,
+      "label": "9763t / 8m 08s",
+      "source_file": "Smelt_3_raw_iron_20260429_070419"
+    },
+    {
+      "item": "iron_pickaxe",
+      "task_key": "Craft_1_iron_pickaxe",
+      "ticks": 9835,
+      "label": "9835t / 8m 12s",
+      "source_file": "Craft_1_iron_pickaxe_20260429_071216"
+    },
+    {
+      "item": "iron_boots",
+      "task_key": "Craft_1_iron_boots",
+      "ticks": 11533,
+      "label": "11533t / 9m 37s",
+      "source_file": "Craft_1_iron_boots_20260429_075623"
+    },
+    {
+      "item": "andesite",
+      "task_key": "Mine_3_iron_ore",
+      "ticks": 12282,
+      "label": "12282t / 10m 14s",
+      "source_file": "Mine_3_iron_ore_20260429_081910"
+    },
+    {
+      "item": "diorite",
+      "task_key": "Mine_3_iron_ore",
+      "ticks": 12282,
+      "label": "12282t / 10m 14s",
+      "source_file": "Mine_3_iron_ore_20260429_081910"
+    },
+    {
+      "item": "granite",
+      "task_key": "Mine_3_iron_ore",
+      "ticks": 12282,
+      "label": "12282t / 10m 14s",
+      "source_file": "Mine_3_iron_ore_20260429_081910"
+    }
+  ]
+}

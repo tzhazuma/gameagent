@@ -141,15 +141,40 @@ def correct_json(json_str: str) -> str:
     return json_str
 
 
+def strip_json_code_fences(json_str: str) -> str:
+    json_str = json_str.strip()
+    fenced_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", json_str, re.IGNORECASE)
+    if fenced_match:
+        return fenced_match.group(1).strip()
+    return json_str
+
+
+def extract_json_value(json_str: str) -> str:
+    candidates = []
+    for open_char, close_char in (("{", "}"), ("[", "]")):
+        start_index = json_str.find(open_char)
+        end_index = json_str.rfind(close_char)
+        if start_index != -1 and end_index != -1 and start_index < end_index:
+            candidates.append((start_index, json_str[start_index : end_index + 1]))
+
+    if not candidates:
+        raise json.JSONDecodeError("No JSON object found", json_str, 0)
+
+    return min(candidates, key=lambda candidate: candidate[0])[1]
+
+
 def fix_and_parse_json(
     json_str: str, try_to_fix_with_gpt: bool = True
 ) -> Union[str, Dict[Any, Any]]:
     """Fix and parse JSON string"""
+    json_str = strip_json_code_fences(json_str.replace("\t", ""))
     try:
-        json_str = json_str.replace("\t", "")
         return json.loads(json_str)
     except json.JSONDecodeError as _:  # noqa: F841
-        json_str = correct_json(json_str)
+        try:
+            json_str = strip_json_code_fences(correct_json(json_str))
+        except json.JSONDecodeError:
+            pass
         try:
             return json.loads(json_str)
         except json.JSONDecodeError as _:  # noqa: F841
@@ -162,10 +187,7 @@ def fix_and_parse_json(
     # So let's try to find the first brace and then parse the rest
     #  of the string
     try:
-        brace_index = json_str.index("{")
-        json_str = json_str[brace_index:]
-        last_brace_index = json_str.rindex("}")
-        json_str = json_str[: last_brace_index + 1]
+        json_str = extract_json_value(json_str)
         return json.loads(json_str)
     except json.JSONDecodeError as e:  # noqa: F841
         # if try_to_fix_with_gpt:

@@ -198,6 +198,40 @@ app.post("/step", async (req, res) => {
     // import useful package
     let response_sent = false;
     const activeBot = bot;
+    async function waitForTicksOrEnd(ticks) {
+        if (!activeBot || activeBot.connectionEnded || ticks <= 0) {
+            return activeBot && !activeBot.connectionEnded ? "ok" : "ended";
+        }
+
+        return await new Promise((resolve) => {
+            let settled = false;
+
+            function cleanup() {
+                activeBot.removeListener("end", onEnd);
+            }
+
+            function finish(result) {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                cleanup();
+                resolve(result);
+            }
+
+            function onEnd() {
+                finish("ended");
+            }
+
+            activeBot.once("end", onEnd);
+            activeBot.waitForTicks(ticks).then(() => {
+                finish(activeBot.connectionEnded ? "ended" : "ok");
+            }).catch(() => {
+                finish("ended");
+            });
+        });
+    }
+
     function otherError(err) {
         console.log("Uncaught Error");
         console.log(err?.stack || err);
@@ -209,16 +243,14 @@ app.post("/step", async (req, res) => {
             return;
         }
         activeBot.emit("error", handleError(err));
-        activeBot.waitForTicks(activeBot.waitTicks).then(() => {
+        waitForTicksOrEnd(activeBot.waitTicks).then((waitResult) => {
             if (!response_sent) {
                 response_sent = true;
-                res.json(activeBot.observe());
-            }
-        }).catch((waitErr) => {
-            console.log(waitErr?.stack || waitErr);
-            if (!response_sent) {
-                response_sent = true;
-                res.status(500).json({ error: String(err?.message || err) });
+                if (waitResult === "ended") {
+                    res.status(500).json({ error: String(err?.message || err) });
+                } else {
+                    res.json(activeBot.observe());
+                }
             }
         });
     }
@@ -301,15 +333,29 @@ app.post("/step", async (req, res) => {
     await activeBot.waitForTicks(activeBot.waitTicks);
     const r = await evaluateCode(code, programs);
     process.off("uncaughtException", otherError);
+    let handledError = null;
     if (r !== "success") {
-        activeBot.emit("error", handleError(r));
+        handledError = handleError(r);
+        activeBot.emit("error", handledError);
     }
-    await returnItems();
+    if (!activeBot.connectionEnded) {
+        try {
+            await returnItems();
+        } catch (returnErr) {
+            console.log(returnErr?.stack || returnErr);
+        }
+    }
     // wait for last message
-    await activeBot.waitForTicks(activeBot.waitTicks);
+    const waitResult = await waitForTicksOrEnd(activeBot.waitTicks);
     if (!response_sent) {
         response_sent = true;
-        res.json(activeBot.observe());
+        if (waitResult === "ended") {
+            res.status(500).json({
+                error: String(handledError || (r !== "success" ? r : "Bot connection ended")),
+            });
+        } else {
+            res.json(activeBot.observe());
+        }
     }
     activeBot.removeListener("physicTick", onTick);
 
