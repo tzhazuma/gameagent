@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -14,10 +15,40 @@ DEFAULT_TASKS = [
     "Mine 3 spruce_log",
     "Craft 8 spruce_planks",
     "Craft 1 crafting_table",
+    "Craft 4 sticks",
+    "Craft 4 spruce_planks",
     "Craft 1 wooden_pickaxe",
     "Mine 3 cobblestone",
+    "Craft 1 stone_pickaxe",
+    "Mine 8 cobblestone",
+    "Craft 1 furnace",
 ]
 DEFAULT_POSITION = {"x": 0.5, "y": 81.0, "z": 0.5}
+TASK_TO_SKILL = {
+    "Mine 1 wood log": "mineWoodLog",
+    "Mine 3 spruce_log": "mineThreeSpruceLogs",
+    "Craft 4 spruce_planks": "craftSprucePlanks",
+    "Craft 8 spruce_planks": "craftEightSprucePlanks",
+    "Craft 1 crafting_table": "craftCraftingTable",
+    "Craft 4 sticks": "craftFourSticks",
+    "Craft 1 wooden_pickaxe": "craftWoodenPickaxe",
+    "Mine 3 cobblestone": "mineThreeCobblestone",
+    "Craft 1 stone_pickaxe": "craftStonePickaxe",
+    "Mine 8 cobblestone": "mineEightCobblestone",
+    "Craft 1 furnace": "craftFurnace",
+}
+WOOD_LOG_NAMES = [
+    "oak_log",
+    "birch_log",
+    "spruce_log",
+    "jungle_log",
+    "acacia_log",
+    "dark_oak_log",
+    "mangrove_log",
+]
+TASK_ITEM_ALIASES = {
+    "sticks": "stick",
+}
 
 
 def load_local_env(file_name: str = ".env.local") -> None:
@@ -122,6 +153,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_TASKS,
         help="Ordered task sequence to run",
     )
+    parser.add_argument(
+        "--mode",
+        choices=("agent", "direct"),
+        default="agent",
+        help="Use the full action agent loop or replay learned skills directly",
+    )
+    parser.add_argument(
+        "--done-file",
+        help="Optional file written when the run exits",
+    )
     return parser
 
 
@@ -140,9 +181,94 @@ import voyager.utils as U
 from voyager import Voyager
 
 
+def has_error_event(events) -> bool:
+    return any(event_type == "onError" for event_type, _ in events)
+
+
+def final_snapshot(events) -> dict:
+    if not events:
+        return {}
+    return events[-1][1]
+
+
+def inventory_count(snapshot: dict, item_name: str) -> int:
+    inventory = snapshot.get("inventory", {})
+    return inventory.get(item_name, 0)
+
+
+def has_equipped_item(snapshot: dict, item_name: str) -> bool:
+    equipment = snapshot.get("status", {}).get("equipment", [])
+    return item_name in equipment
+
+
+def validate_direct_task(task: str, events) -> tuple[bool, str]:
+    snapshot = final_snapshot(events)
+    match = re.match(r"^(Mine|Craft) (\d+) (.+)$", task)
+    if match:
+        _, amount_text, raw_item = match.groups()
+        amount = int(amount_text)
+        item_name = TASK_ITEM_ALIASES.get(raw_item, raw_item).replace(" ", "_")
+        if item_name == "wood_log":
+            total_logs = sum(inventory_count(snapshot, name) for name in WOOD_LOG_NAMES)
+            if total_logs >= amount:
+                return True, ""
+            return False, f"expected at least {amount} wood log, found {total_logs}"
+        item_total = inventory_count(snapshot, item_name)
+        if item_total >= amount:
+            return True, ""
+        if has_equipped_item(snapshot, item_name):
+            return True, ""
+        return False, f"expected at least {amount} {item_name}, found {item_total}"
+
+    match = re.match(r"^Equip (.+)$", task)
+    if match:
+        item_name = match.group(1).replace(" ", "_")
+        if has_equipped_item(snapshot, item_name):
+            return True, ""
+        return False, f"expected {item_name} to be equipped"
+
+    return False, f"no direct validator for task: {task}"
+
+
+def run_direct_sequence(voyager: Voyager, tasks: list[str]) -> tuple[list[str], list[str]]:
+    completed = []
+    failed = []
+    for task in tasks:
+        skill_name = TASK_TO_SKILL.get(task)
+        if not skill_name:
+            failed.append(task)
+            print(f"No direct skill mapping for task: {task}")
+            break
+        print(f"Running learned skill {skill_name} for task: {task}")
+        try:
+            events = voyager.env.step(
+                f"await {skill_name}(bot)",
+                programs=voyager.skill_manager.programs,
+            )
+        except Exception as exc:
+            print(f"Direct skill run failed for {task}: {exc}")
+            failed.append(task)
+            break
+        voyager.recorder.record(events, task)
+        voyager.last_events = events
+        if has_error_event(events):
+            failed.append(task)
+            print(f"Task produced onError events: {task}")
+            break
+        valid, reason = validate_direct_task(task, events)
+        if not valid:
+            failed.append(task)
+            print(f"Task validation failed for {task}: {reason}")
+            break
+        completed.append(task)
+    return completed, failed
+
+
 def main() -> None:
     args = build_parser().parse_args()
     model_name = os.environ.get("VOYAGER_MODEL_NAME", "kimi-k2.6")
+    completed: list[str] = []
+    failed: list[str] = []
 
     print("=" * 60)
     print("VOYAGER RECORDED DEMO")
@@ -150,6 +276,7 @@ def main() -> None:
     print(f"Minecraft port: {args.port}")
     print(f"Checkpoint dir: {args.ckpt_dir}")
     print(f"Skill library: {args.skill_library_dir}")
+    print(f"Mode: {args.mode}")
     print(f"Viewer port: {os.environ.get('VOYAGER_VIEWER_PORT', 'disabled')}")
     print(f"Start position: {args.position}")
     print("Task sequence:")
@@ -194,28 +321,31 @@ def main() -> None:
             options=reset_options
         )
 
-        results = []
-        for task in args.tasks:
-            context = voyager.curriculum_agent.get_task_context(task)
-            try:
-                _, _, _, info = voyager.rollout(
-                    task=task,
-                    context=context,
-                    reset_env=False,
-                )
-            except Exception as exc:
-                info = {
-                    "task": task,
-                    "success": False,
-                    "error": str(exc),
-                }
-            results.append(info)
-            voyager.curriculum_agent.update_exploration_progress(info)
-            if not info["success"]:
-                break
+        if args.mode == "direct":
+            completed, failed = run_direct_sequence(voyager, args.tasks)
+        else:
+            results = []
+            for task in args.tasks:
+                context = voyager.curriculum_agent.get_task_context(task)
+                try:
+                    _, _, _, info = voyager.rollout(
+                        task=task,
+                        context=context,
+                        reset_env=False,
+                    )
+                except Exception as exc:
+                    info = {
+                        "task": task,
+                        "success": False,
+                        "error": str(exc),
+                    }
+                results.append(info)
+                voyager.curriculum_agent.update_exploration_progress(info)
+                if not info["success"]:
+                    break
 
-        completed = [item["task"] for item in results if item["success"]]
-        failed = [item["task"] for item in results if not item["success"]]
+            completed = [item["task"] for item in results if item["success"]]
+            failed = [item["task"] for item in results if not item["success"]]
 
         print("\n" + "=" * 60)
         print("RECORDED DEMO COMPLETE")
@@ -226,6 +356,13 @@ def main() -> None:
         print("\nInterrupted by user.")
     finally:
         voyager.close()
+        if args.done_file:
+            done_path = Path(args.done_file)
+            done_path.parent.mkdir(parents=True, exist_ok=True)
+            done_path.write_text(
+                json.dumps({"completed": completed, "failed": failed}, indent=2) + "\n",
+                encoding="utf-8",
+            )
         print("Voyager closed.")
 
 

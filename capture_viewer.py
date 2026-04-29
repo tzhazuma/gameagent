@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import signal
 import shutil
 import subprocess
 import tempfile
@@ -68,6 +69,10 @@ def parse_args() -> argparse.Namespace:
         default=6,
         help="How long to wait after the page opens before recording starts",
     )
+    parser.add_argument(
+        "--stop-when-file-exists",
+        help="Optional path whose creation stops recording early",
+    )
     return parser.parse_args()
 
 
@@ -79,6 +84,7 @@ def main() -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     wait_for_url(args.url, args.wait_timeout)
+    stop_file = Path(args.stop_when_file_exists).resolve() if args.stop_when_file_exists else None
 
     with tempfile.TemporaryDirectory(prefix="voyager-chromium-") as profile_dir:
         xvfb = subprocess.Popen(
@@ -87,6 +93,7 @@ def main() -> None:
             stderr=subprocess.DEVNULL,
         )
         browser = None
+        ffmpeg = None
         try:
             time.sleep(2)
             env = dict(os.environ)
@@ -134,8 +141,29 @@ def main() -> None:
                 "+faststart",
                 str(output_path),
             ]
-            subprocess.run(ffmpeg_command, check=True)
+            ffmpeg = subprocess.Popen(ffmpeg_command, stdin=subprocess.PIPE, text=True)
+            stop_requested = False
+            while ffmpeg.poll() is None:
+                if stop_file is not None and stop_file.exists() and not stop_requested:
+                    stop_requested = True
+                    if ffmpeg.stdin is not None:
+                        try:
+                            ffmpeg.stdin.write("q\n")
+                            ffmpeg.stdin.flush()
+                        except BrokenPipeError:
+                            pass
+                    else:
+                        ffmpeg.send_signal(signal.SIGINT)
+                time.sleep(1)
+            if ffmpeg.returncode not in (0, None):
+                raise subprocess.CalledProcessError(ffmpeg.returncode, ffmpeg_command)
         finally:
+            if ffmpeg is not None and ffmpeg.poll() is None:
+                ffmpeg.terminate()
+                try:
+                    ffmpeg.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    ffmpeg.kill()
             if browser is not None and browser.poll() is None:
                 browser.terminate()
                 try:

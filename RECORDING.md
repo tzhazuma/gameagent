@@ -53,9 +53,21 @@ To record the viewer page directly to MP4 in this environment:
 ./venv/bin/python capture_viewer.py http://127.0.0.1:3007/ recordings/voyager-demo.mp4 --duration 90
 ```
 
-The default local server helper creates a small floating arena with logs and cobblestone so `run_recorded_demo.py` can execute a short deterministic task sequence without depending on a manually opened LAN world.
+The default local server helper creates a small floating arena with logs and exposed stone so `run_recorded_demo.py` can execute a short deterministic task sequence without depending on a manually opened LAN world.
 
 A generated sample recording is now stored at `recordings/voyager-demo.mp4`.
+
+For a full one-command run that starts the local server, runs Voyager, records the viewer, crops the browser chrome, and stops everything automatically:
+
+```bash
+./venv/bin/python record_demo_pipeline.py
+```
+
+The default pipeline uses a longer task sequence than the earlier smoke test, runs in `direct` mode by default, records for up to 240 seconds, and overwrites `recordings/voyager-demo.mp4` with the cleaned result.
+
+If the task run exits before the cap, capture stops automatically. If the task run is still active when capture hits the cap, the pipeline prints a warning so you can rerun it with a larger `--duration`.
+
+`direct` mode replays learned skill functions from `ckpt_voyager/skill/skills.json` directly. This is useful for recording because it preserves the real learned behavior while avoiding long idle gaps between action-model generations.
 
 ## Prismarine Viewer Headless MP4
 

@@ -140,3 +140,6 @@ voyager/env/mineflayer/test_spawn.js
 recordings/frames/
 recordings/*.log
 recordings/*-frame.png
+recordings/*-smoke.mp4
+recordings/*-long.mp4
+recordings/*.done

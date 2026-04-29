@@ -20,11 +20,14 @@ Inspection showed that this repo and the local `~/.minecraft/mods` setup did not
 - short recording-oriented runner: `run_recorded_demo.py`
 - local offline demo server: `start_demo_server.py`
 - Chromium/Xvfb viewer recorder: `capture_viewer.py`
+- one-command pipeline: `record_demo_pipeline.py`
 - recorded sample artifact: `recordings/voyager-demo.mp4`
 
 The generated site now includes an interactive explorer with filtering, route visualization, and per-task snapshot details from the real `ckpt_voyager` data.
 
 This repo now also contains a real recorded gameplay artifact generated locally from the prismarine viewer pipeline: `recordings/voyager-demo.mp4`.
+
+The recommended recording path is now `record_demo_pipeline.py` in `direct` mode, which replays the learned `ckpt_voyager` skill functions directly so the video stays visually active instead of spending most of its time waiting for a fresh action-model turn. The pipeline records up to its configured duration and stops early when the scripted run exits.
 
 These two charts are generated from the current real checkpoint:
 
@@ -33,6 +36,11 @@ These two charts are generated from the current real checkpoint:
 ![Voyager demo tasks](demo/tasks.svg)
 
 GitHub Pages deployment is defined in `.github/workflows/pages.yml` and publishes `docs/` on pushes to `main`.
+
+Current public status: the first Pages workflow run failed because this repository does not have GitHub Pages enabled yet, so `https://tzhazuma.github.io/gameagent/` currently returns `404`. The workflow is now prepared for both cases:
+
+- if Pages is enabled once in repository settings, pushes to `main` will deploy `docs/`
+- if a `PAGES_DEPLOY_PAT` secret is configured, the workflow can auto-enable Pages before deploying
 
 ## Project Goals
 
