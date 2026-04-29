@@ -128,9 +128,15 @@ debug_*
 logs/
 plot_iter.py
 *.svg
+!demo/*.svg
+!docs/*.svg
 *.aux
 *.fdb_latexmk
 *.fls
 *.pid
 launch_mc.out
 voyager/env/mineflayer/test_spawn.js
+.demo_server/
+recordings/frames/
+recordings/*.log
+recordings/*-frame.png

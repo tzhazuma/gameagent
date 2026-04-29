@@ -6,22 +6,35 @@
 
 `report.pdf` 是对应的 LaTeX 实验报告，源码在 `report.tex`。
 
-## 可视化演示
+## Visualization Demo
 
-检查结果：当前仓库和本机 `~/.minecraft/mods` 中都没有 Replay Mod，也没有已生成的 `.mcpr`、视频或截图产物，因此这个分支现在补了一条不依赖 Replay Mod 的可视化导出链路。
+Inspection showed that this repo and the local `~/.minecraft/mods` setup did not contain Replay Mod, `.mcpr` files, exported videos, or screenshot artifacts. This branch therefore adds a checkpoint-driven demo pipeline that does not depend on Replay Mod.
 
-- 生成脚本：`generate_demo.py`
-- 运行命令：`./venv/bin/python generate_demo.py`
-- 演示页面：`demo/index.html`
-- GitHub 可直接查看的静态图：`demo/dashboard.svg`、`demo/tasks.svg`
+- generator: `generate_demo.py`
+- run command: `./venv/bin/python generate_demo.py`
+- local explorer: `demo/index.html`
+- GitHub Pages copy: `docs/index.html`
+- static charts: `demo/dashboard.svg`, `demo/tasks.svg`
+- recording notes: `RECORDING.md`
+- Replay Mod installer: `install_replaymod.py`
+- short recording-oriented runner: `run_recorded_demo.py`
+- local offline demo server: `start_demo_server.py`
+- Chromium/Xvfb viewer recorder: `capture_viewer.py`
+- recorded sample artifact: `recordings/voyager-demo.mp4`
 
-下面这两张图来自当前真实 checkpoint 自动导出：
+The generated site now includes an interactive explorer with filtering, route visualization, and per-task snapshot details from the real `ckpt_voyager` data.
+
+This repo now also contains a real recorded gameplay artifact generated locally from the prismarine viewer pipeline: `recordings/voyager-demo.mp4`.
+
+These two charts are generated from the current real checkpoint:
 
 ![Voyager demo dashboard](demo/dashboard.svg)
 
 ![Voyager demo tasks](demo/tasks.svg)
 
-## 项目目标
+GitHub Pages deployment is defined in `.github/workflows/pages.yml` and publishes `docs/` on pushes to `main`.
+
+## Project Goals
 
 - 在真实 Minecraft LAN 世界中持续运行 Voyager，而不是只做离线分析。
 - 使用 `.env.local` 提供 `OPENAI_API_KEY`、`OPENAI_API_BASE`、`VOYAGER_MODEL_NAME`。

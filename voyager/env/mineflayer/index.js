@@ -123,6 +123,9 @@ app.post("/start", (req, res) => {
         const collectBlock = require("mineflayer-collectblock").plugin;
         const pvp = require("mineflayer-pvp").plugin;
         const minecraftHawkEye = require("minecrafthawkeye").default;
+        const viewerPort = Number(req.body.viewerPort || process.env.VOYAGER_VIEWER_PORT || 0);
+        const viewerFirstPerson = Boolean(req.body.viewerFirstPerson);
+        const viewerDrawPath = req.body.viewerDrawPath !== false;
         console.log("loading plugins");
         activeBot.loadPlugin(pathfinder);
         activeBot.loadPlugin(tool);
@@ -130,6 +133,35 @@ app.post("/start", (req, res) => {
         activeBot.loadPlugin(pvp);
         activeBot.loadPlugin(minecraftHawkEye);
         console.log("plugins loaded");
+
+        if (viewerPort > 0) {
+            const mineflayerViewer = require("prismarine-viewer").mineflayer;
+            console.log(`starting prismarine viewer on port ${viewerPort}`);
+            mineflayerViewer(activeBot, {
+                port: viewerPort,
+                firstPerson: viewerFirstPerson,
+            });
+            if (viewerDrawPath) {
+                const path = [activeBot.entity.position.clone()];
+                const onViewerMove = () => {
+                    const previous = path[path.length - 1];
+                    if (!previous || previous.distanceTo(activeBot.entity.position) <= 1) {
+                        return;
+                    }
+                    path.push(activeBot.entity.position.clone());
+                    if (path.length > 160) {
+                        path.shift();
+                    }
+                    if (activeBot.viewer) {
+                        activeBot.viewer.drawLine("path", path, 0x60a5fa);
+                    }
+                };
+                activeBot.on("move", onViewerMove);
+                activeBot.once("end", () => {
+                    activeBot.removeListener("move", onViewerMove);
+                });
+            }
+        }
 
         // bot.collectBlock.movements.digCost = 0;
         // bot.collectBlock.movements.placeCost = 0;

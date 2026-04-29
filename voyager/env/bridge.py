@@ -50,6 +50,10 @@ class VoyagerEnv(gym.Env):
         self.connected = False
         self.server_paused = False
         self.pause_enabled = os.environ.get("VOYAGER_ENABLE_PAUSE") == "1"
+        viewer_port = os.environ.get("VOYAGER_VIEWER_PORT")
+        self.viewer_port = int(viewer_port) if viewer_port else None
+        self.viewer_first_person = os.environ.get("VOYAGER_VIEWER_FIRST_PERSON") == "1"
+        self.viewer_draw_path = os.environ.get("VOYAGER_VIEWER_DRAW_PATH", "1") != "0"
 
     def _post(self, path, payload=None, timeout=None):
         return self.session.post(
@@ -191,6 +195,9 @@ class VoyagerEnv(gym.Env):
             "spread": options.get("spread", False),
             "waitTicks": options.get("wait_ticks", 5),
             "position": options.get("position", None),
+            "viewerPort": self.viewer_port,
+            "viewerFirstPerson": self.viewer_first_person,
+            "viewerDrawPath": self.viewer_draw_path,
         }
 
         self.unpause()
