@@ -26,41 +26,64 @@ app.post("/start", (req, res) => {
     if (bot) onDisconnect("Restarting bot");
     bot = null;
     console.log(req.body);
+    let responseSent = false;
+    const startTimeout = setTimeout(() => {
+        if (!responseSent) {
+            responseSent = true;
+            console.log("/start timeout waiting for bot spawn");
+            try {
+                if (bot) bot.end();
+            } catch {}
+            bot = null;
+            res.status(504).json({ error: "Timed out waiting for bot spawn" });
+        }
+    }, 30000);
     bot = mineflayer.createBot({
-        host: "localhost", // minecraft server ip
-        port: req.body.port, // minecraft server port
+        host: "localhost",
+        port: req.body.port,
         username: "bot",
+        auth: "offline",
+        version: "1.19",
         disableChatSigning: true,
         checkTimeoutInterval: 60 * 60 * 1000,
     });
-    bot.once("error", onConnectionFailed);
-
-    // Event subscriptions
-    bot.waitTicks = req.body.waitTicks;
-    bot.globalTickCounter = 0;
-    bot.stuckTickCounter = 0;
-    bot.stuckPosList = [];
-    bot.iron_pickaxe = false;
-
-    bot.on("kicked", onDisconnect);
-
-    // mounting will cause physicsTick to stop
-    bot.on("mount", () => {
-        bot.dismount();
+    const activeBot = bot;
+    activeBot.connectionEnded = false;
+    activeBot.once("error", onConnectionFailed);
+    activeBot.on("end", () => {
+        activeBot.connectionEnded = true;
+        console.log("Bot connection ended");
     });
 
-    bot.once("spawn", async () => {
-        bot.removeListener("error", onConnectionFailed);
+    // Event subscriptions
+    activeBot.waitTicks = req.body.waitTicks;
+    activeBot.globalTickCounter = 0;
+    activeBot.stuckTickCounter = 0;
+    activeBot.stuckPosList = [];
+    activeBot.iron_pickaxe = false;
+
+    activeBot.on("kicked", onDisconnect);
+
+    // mounting will cause physicsTick to stop
+    activeBot.on("mount", () => {
+        activeBot.dismount();
+    });
+
+    activeBot.once("spawn", async () => {
+        if (responseSent) return;
+        console.log("bot spawn event fired");
+        activeBot.removeListener("error", onConnectionFailed);
+        activeBot.chat("/gamemode survival");
         let itemTicks = 1;
         if (req.body.reset === "hard") {
-            bot.chat("/clear @s");
-            bot.chat("/kill @s");
+            activeBot.chat("/clear @s");
+            activeBot.chat("/kill @s");
             const inventory = req.body.inventory ? req.body.inventory : {};
             const equipment = req.body.equipment
                 ? req.body.equipment
                 : [null, null, null, null, null, null];
             for (let key in inventory) {
-                bot.chat(`/give @s minecraft:${key} ${inventory[key]}`);
+                activeBot.chat(`/give @s minecraft:${key} ${inventory[key]}`);
                 itemTicks += 1;
             }
             const equipmentNames = [
@@ -74,7 +97,7 @@ app.post("/start", (req, res) => {
             for (let i = 0; i < 6; i++) {
                 if (i === 4) continue;
                 if (equipment[i]) {
-                    bot.chat(
+                    activeBot.chat(
                         `/item replace entity @s ${equipmentNames[i]} with minecraft:${equipment[i]}`
                     );
                     itemTicks += 1;
@@ -83,33 +106,35 @@ app.post("/start", (req, res) => {
         }
 
         if (req.body.position) {
-            bot.chat(
+            activeBot.chat(
                 `/tp @s ${req.body.position.x} ${req.body.position.y} ${req.body.position.z}`
             );
         }
 
         // if iron_pickaxe is in bot's inventory
         if (
-            bot.inventory.items().find((item) => item.name === "iron_pickaxe")
+            activeBot.inventory.items().find((item) => item.name === "iron_pickaxe")
         ) {
-            bot.iron_pickaxe = true;
+            activeBot.iron_pickaxe = true;
         }
 
         const { pathfinder } = require("mineflayer-pathfinder");
         const tool = require("mineflayer-tool").plugin;
         const collectBlock = require("mineflayer-collectblock").plugin;
         const pvp = require("mineflayer-pvp").plugin;
-        const minecraftHawkEye = require("minecrafthawkeye");
-        bot.loadPlugin(pathfinder);
-        bot.loadPlugin(tool);
-        bot.loadPlugin(collectBlock);
-        bot.loadPlugin(pvp);
-        bot.loadPlugin(minecraftHawkEye);
+        const minecraftHawkEye = require("minecrafthawkeye").default;
+        console.log("loading plugins");
+        activeBot.loadPlugin(pathfinder);
+        activeBot.loadPlugin(tool);
+        activeBot.loadPlugin(collectBlock);
+        activeBot.loadPlugin(pvp);
+        activeBot.loadPlugin(minecraftHawkEye);
+        console.log("plugins loaded");
 
         // bot.collectBlock.movements.digCost = 0;
         // bot.collectBlock.movements.placeCost = 0;
 
-        obs.inject(bot, [
+        obs.inject(activeBot, [
             OnChat,
             OnError,
             Voxels,
@@ -119,53 +144,88 @@ app.post("/start", (req, res) => {
             Chests,
             BlockRecords,
         ]);
-        skills.inject(bot);
+        console.log("observations injected");
+        skills.inject(activeBot);
+        console.log("skills injected");
 
         if (req.body.spread) {
-            bot.chat(`/spreadplayers ~ ~ 0 300 under 80 false @s`);
-            await bot.waitForTicks(bot.waitTicks);
+            activeBot.chat(`/spreadplayers ~ ~ 0 300 under 80 false @s`);
+            await activeBot.waitForTicks(activeBot.waitTicks);
         }
 
-        await bot.waitForTicks(bot.waitTicks * itemTicks);
-        res.json(bot.observe());
+        await activeBot.waitForTicks(activeBot.waitTicks * itemTicks);
+        console.log("about to observe bot state");
+        if (!responseSent) {
+            responseSent = true;
+            clearTimeout(startTimeout);
+            res.json(activeBot.observe());
+            console.log("start response sent");
+        }
 
-        initCounter(bot);
-        bot.chat("/gamerule keepInventory true");
-        bot.chat("/gamerule doDaylightCycle false");
+        initCounter(activeBot);
+        activeBot.chat("/gamerule keepInventory true");
+        activeBot.chat("/gamerule doDaylightCycle false");
     });
 
     function onConnectionFailed(e) {
         console.log(e);
-        bot = null;
-        res.status(400).json({ error: e });
+        clearTimeout(startTimeout);
+        if (bot === activeBot) {
+            bot = null;
+        }
+        if (!responseSent) {
+            responseSent = true;
+            res.status(400).json({ error: String(e?.message || e) });
+        }
     }
     function onDisconnect(message) {
-        if (bot.viewer) {
-            bot.viewer.close();
+        if (activeBot.viewer) {
+            activeBot.viewer.close();
         }
-        bot.end();
+        activeBot.end();
         console.log(message);
-        bot = null;
+        if (bot === activeBot) {
+            bot = null;
+        }
     }
 });
 
 app.post("/step", async (req, res) => {
+    if (!bot || bot.connectionEnded) {
+        res.status(400).json({ error: "Bot not spawned" });
+        return;
+    }
     // import useful package
     let response_sent = false;
+    const activeBot = bot;
     function otherError(err) {
         console.log("Uncaught Error");
-        bot.emit("error", handleError(err));
-        bot.waitForTicks(bot.waitTicks).then(() => {
+        console.log(err?.stack || err);
+        if (!activeBot || activeBot.connectionEnded) {
             if (!response_sent) {
                 response_sent = true;
-                res.json(bot.observe());
+                res.status(500).json({ error: String(err?.message || err) });
+            }
+            return;
+        }
+        activeBot.emit("error", handleError(err));
+        activeBot.waitForTicks(activeBot.waitTicks).then(() => {
+            if (!response_sent) {
+                response_sent = true;
+                res.json(activeBot.observe());
+            }
+        }).catch((waitErr) => {
+            console.log(waitErr?.stack || waitErr);
+            if (!response_sent) {
+                response_sent = true;
+                res.status(500).json({ error: String(err?.message || err) });
             }
         });
     }
 
     process.on("uncaughtException", otherError);
 
-    const mcData = require("minecraft-data")(bot.version);
+    const mcData = require("minecraft-data")(activeBot.version);
     mcData.itemsByName["leather_cap"] = mcData.itemsByName["leather_helmet"];
     mcData.itemsByName["leather_tunic"] =
         mcData.itemsByName["leather_chestplate"];
@@ -204,25 +264,28 @@ app.post("/step", async (req, res) => {
     const { Vec3 } = require("vec3");
 
     // Set up pathfinder
-    const movements = new Movements(bot, mcData);
-    bot.pathfinder.setMovements(movements);
+    const movements = new Movements(activeBot, mcData);
+    activeBot.pathfinder.setMovements(movements);
 
-    bot.globalTickCounter = 0;
-    bot.stuckTickCounter = 0;
-    bot.stuckPosList = [];
+    activeBot.globalTickCounter = 0;
+    activeBot.stuckTickCounter = 0;
+    activeBot.stuckPosList = [];
 
     function onTick() {
-        bot.globalTickCounter++;
-        if (bot.pathfinder.isMoving()) {
-            bot.stuckTickCounter++;
-            if (bot.stuckTickCounter >= 100) {
+        if (!activeBot || activeBot.connectionEnded) {
+            return;
+        }
+        activeBot.globalTickCounter++;
+        if (activeBot.pathfinder.isMoving()) {
+            activeBot.stuckTickCounter++;
+            if (activeBot.stuckTickCounter >= 100) {
                 onStuck(1.5);
-                bot.stuckTickCounter = 0;
+                activeBot.stuckTickCounter = 0;
             }
         }
     }
 
-    bot.on("physicTick", onTick);
+    activeBot.on("physicTick", onTick);
 
     // initialize fail count
     let _craftItemFailCount = 0;
@@ -234,21 +297,21 @@ app.post("/step", async (req, res) => {
     // Retrieve array form post bod
     const code = req.body.code;
     const programs = req.body.programs;
-    bot.cumulativeObs = [];
-    await bot.waitForTicks(bot.waitTicks);
+    activeBot.cumulativeObs = [];
+    await activeBot.waitForTicks(activeBot.waitTicks);
     const r = await evaluateCode(code, programs);
     process.off("uncaughtException", otherError);
     if (r !== "success") {
-        bot.emit("error", handleError(r));
+        activeBot.emit("error", handleError(r));
     }
     await returnItems();
     // wait for last message
-    await bot.waitForTicks(bot.waitTicks);
+    await activeBot.waitForTicks(activeBot.waitTicks);
     if (!response_sent) {
         response_sent = true;
-        res.json(bot.observe());
+        res.json(activeBot.observe());
     }
-    bot.removeListener("physicTick", onTick);
+    activeBot.removeListener("physicTick", onTick);
 
     async function evaluateCode(code, programs) {
         // Echo the code produced for players to see it. Don't echo when the bot code is already producing dialog or it will double echo
@@ -261,12 +324,12 @@ app.post("/step", async (req, res) => {
     }
 
     function onStuck(posThreshold) {
-        const currentPos = bot.entity.position;
-        bot.stuckPosList.push(currentPos);
+        const currentPos = activeBot.entity.position;
+        activeBot.stuckPosList.push(currentPos);
 
         // Check if the list is full
-        if (bot.stuckPosList.length === 5) {
-            const oldestPos = bot.stuckPosList[0];
+        if (activeBot.stuckPosList.length === 5) {
+            const oldestPos = activeBot.stuckPosList[0];
             const posDifference = currentPos.distanceTo(oldestPos);
 
             if (posDifference < posThreshold) {
@@ -274,12 +337,12 @@ app.post("/step", async (req, res) => {
             }
 
             // Remove the oldest time from the list
-            bot.stuckPosList.shift();
+            activeBot.stuckPosList.shift();
         }
     }
 
     function teleportBot() {
-        const blocks = bot.findBlocks({
+        const blocks = activeBot.findBlocks({
             matching: (block) => {
                 return block.type === 0;
             },
@@ -287,52 +350,51 @@ app.post("/step", async (req, res) => {
             count: 27,
         });
 
-        if (blocks) {
-            // console.log(blocks.length);
+        if (blocks.length > 0) {
             const randomIndex = Math.floor(Math.random() * blocks.length);
             const block = blocks[randomIndex];
-            bot.chat(`/tp @s ${block.x} ${block.y} ${block.z}`);
+            activeBot.chat(`/tp @s ${block.x} ${block.y} ${block.z}`);
         } else {
-            bot.chat("/tp @s ~ ~1.25 ~");
+            activeBot.chat("/tp @s ~ ~1.25 ~");
         }
     }
 
     function returnItems() {
-        bot.chat("/gamerule doTileDrops false");
-        const crafting_table = bot.findBlock({
+        activeBot.chat("/gamerule doTileDrops false");
+        const crafting_table = activeBot.findBlock({
             matching: mcData.blocksByName.crafting_table.id,
             maxDistance: 128,
         });
         if (crafting_table) {
-            bot.chat(
+            activeBot.chat(
                 `/setblock ${crafting_table.position.x} ${crafting_table.position.y} ${crafting_table.position.z} air destroy`
             );
-            bot.chat("/give @s crafting_table");
+            activeBot.chat("/give @s crafting_table");
         }
-        const furnace = bot.findBlock({
+        const furnace = activeBot.findBlock({
             matching: mcData.blocksByName.furnace.id,
             maxDistance: 128,
         });
         if (furnace) {
-            bot.chat(
+            activeBot.chat(
                 `/setblock ${furnace.position.x} ${furnace.position.y} ${furnace.position.z} air destroy`
             );
-            bot.chat("/give @s furnace");
+            activeBot.chat("/give @s furnace");
         }
-        if (bot.inventoryUsed() >= 32) {
+        if (activeBot.inventoryUsed() >= 32) {
             // if chest is not in bot's inventory
-            if (!bot.inventory.items().find((item) => item.name === "chest")) {
-                bot.chat("/give @s chest");
+            if (!activeBot.inventory.items().find((item) => item.name === "chest")) {
+                activeBot.chat("/give @s chest");
             }
         }
         // if iron_pickaxe not in bot's inventory and bot.iron_pickaxe
         if (
-            bot.iron_pickaxe &&
-            !bot.inventory.items().find((item) => item.name === "iron_pickaxe")
+            activeBot.iron_pickaxe &&
+            !activeBot.inventory.items().find((item) => item.name === "iron_pickaxe")
         ) {
-            bot.chat("/give @s iron_pickaxe");
+            activeBot.chat("/give @s iron_pickaxe");
         }
-        bot.chat("/gamerule doTileDrops true");
+        activeBot.chat("/gamerule doTileDrops true");
     }
 
     function handleError(err) {
@@ -399,14 +461,17 @@ app.post("/step", async (req, res) => {
 });
 
 app.post("/stop", (req, res) => {
-    bot.end();
+    if (bot) {
+        bot.end();
+        bot = null;
+    }
     res.json({
         message: "Bot stopped",
     });
 });
 
 app.post("/pause", (req, res) => {
-    if (!bot) {
+    if (!bot || bot.connectionEnded) {
         res.status(400).json({ error: "Bot not spawned" });
         return;
     }

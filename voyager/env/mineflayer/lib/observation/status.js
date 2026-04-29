@@ -12,6 +12,7 @@ class Status extends Observation {
             food: this.bot.food,
             saturation: this.bot.foodSaturation,
             oxygen: this.bot.oxygenLevel,
+            gameMode: this.bot.game?.gameMode ?? "unknown",
             position: this.bot.entity.position,
             velocity: this.bot.entity.velocity,
             yaw: this.bot.entity.yaw,

@@ -21,6 +21,7 @@ class ActionAgent:
         resume=False,
         chat_log=True,
         execution_error=True,
+        openai_api_base=None,
     ):
         self.ckpt_dir = ckpt_dir
         self.chat_log = chat_log
@@ -31,11 +32,15 @@ class ActionAgent:
             self.chest_memory = U.load_json(f"{ckpt_dir}/action/chest_memory.json")
         else:
             self.chest_memory = {}
-        self.llm = ChatOpenAI(
+        llm_kwargs = dict(
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            max_retries=0,
         )
+        if openai_api_base:
+            llm_kwargs["openai_api_base"] = openai_api_base
+        self.llm = ChatOpenAI(**llm_kwargs)
 
     def update_chest_memory(self, chests):
         for position, chest in chests.items():
@@ -83,7 +88,7 @@ class ActionAgent:
             "smeltItem",
             "killMob",
         ]
-        if not self.llm.model_name == "gpt-3.5-turbo":
+        if self.llm.model_name not in ("gpt-3.5-turbo", "gpt-3.5-turbo-0301"):
             base_skills += [
                 "useChest",
                 "mineflayer",

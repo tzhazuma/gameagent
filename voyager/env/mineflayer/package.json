@@ -12,6 +12,7 @@
     "dependencies": {
         "body-parser": "^1.20.2",
         "express": "^4.18.2",
+        "graceful-fs": "^4.2.11",
         "magic-string": "^0.30.0",
         "minecraft-data": "^3.31.0",
         "minecrafthawkeye": "^1.3.6",
@@ -29,8 +30,7 @@
         "prismarine-recipe": "^1.3.1",
         "prismarine-viewer": "^1.24.0",
         "typescript": "^4.9.5",
-        "vec3": "^0.1.8",
-        "graceful-fs": "^4.2.11"
+        "vec3": "^0.1.8"
     },
     "devDependencies": {
         "prettier": "2.8.5"

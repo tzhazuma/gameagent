@@ -2,9 +2,9 @@ import os
 
 import voyager.utils as U
 from langchain.chat_models import ChatOpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.vectorstores import Chroma
+from voyager.utils.fake_embeddings import get_embedding_function
 
 from voyager.prompts import load_prompt
 from voyager.control_primitives import load_control_primitives
@@ -19,12 +19,17 @@ class SkillManager:
         request_timout=120,
         ckpt_dir="ckpt",
         resume=False,
+        openai_api_base=None,
     ):
-        self.llm = ChatOpenAI(
+        llm_kwargs = dict(
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            max_retries=0,
         )
+        if openai_api_base:
+            llm_kwargs["openai_api_base"] = openai_api_base
+        self.llm = ChatOpenAI(**llm_kwargs)
         U.f_mkdir(f"{ckpt_dir}/skill/code")
         U.f_mkdir(f"{ckpt_dir}/skill/description")
         U.f_mkdir(f"{ckpt_dir}/skill/vectordb")
@@ -37,9 +42,10 @@ class SkillManager:
             self.skills = {}
         self.retrieval_top_k = retrieval_top_k
         self.ckpt_dir = ckpt_dir
+        embedding_fn = get_embedding_function(openai_api_base=openai_api_base)
         self.vectordb = Chroma(
             collection_name="skill_vectordb",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=embedding_fn,
             persist_directory=f"{ckpt_dir}/skill/vectordb",
         )
         assert self.vectordb._collection.count() == len(self.skills), (
@@ -108,7 +114,14 @@ class SkillManager:
                 + f"The main function is `{program_name}`."
             ),
         ]
-        skill_description = f"    // { self.llm(messages).content}"
+        skill_description = (
+            "    // "
+            + U.call_llm_with_retry(
+                self.llm,
+                messages,
+                label=f"Skill Manager {program_name}",
+            ).content
+        )
         return f"async function {program_name}(bot) {{\n{skill_description}\n}}"
 
     def retrieve_skills(self, query):

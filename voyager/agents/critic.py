@@ -1,3 +1,4 @@
+import voyager.utils as U
 from voyager.prompts import load_prompt
 from voyager.utils.json_utils import fix_and_parse_json
 from langchain.chat_models import ChatOpenAI
@@ -11,12 +12,17 @@ class CriticAgent:
         temperature=0,
         request_timout=120,
         mode="auto",
+        openai_api_base=None,
     ):
-        self.llm = ChatOpenAI(
+        llm_kwargs = dict(
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            max_retries=0,
         )
+        if openai_api_base:
+            llm_kwargs["openai_api_base"] = openai_api_base
+        self.llm = ChatOpenAI(**llm_kwargs)
         assert mode in ["auto", "manual"]
         self.mode = mode
 
@@ -98,7 +104,11 @@ class CriticAgent:
         if messages[1] is None:
             return False, ""
 
-        critic = self.llm(messages).content
+        critic = U.call_llm_with_retry(
+            self.llm,
+            messages,
+            label="Critic Agent",
+        ).content
         print(f"\033[31m****Critic Agent ai message****\n{critic}\033[0m")
         try:
             response = fix_and_parse_json(critic)
