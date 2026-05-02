@@ -1,0 +1,24 @@
+{
+  "seed": "12345",
+  "label": "random-world-12345",
+  "mode": "direct",
+  "fallback_to_agent": true,
+  "timed_out": false,
+  "timeout_seconds": 300,
+  "attempt": 1,
+  "max_attempts": 3,
+  "tasks": [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table"
+  ],
+  "completed": [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table"
+  ],
+  "failed": [],
+  "success": true,
+  "server_log": "recordings/random-world-12345-server.log",
+  "run_log": "recordings/random-world-12345-run.log",
+  "returncode": 0,
+  "interrupted": false
+}

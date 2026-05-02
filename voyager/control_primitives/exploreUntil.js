@@ -37,6 +37,7 @@ async function exploreUntil(
         const dx = direction.x;
         const dy = direction.y;
         const dz = direction.z;
+        const originY = Math.floor(bot.entity.position.y);
 
         let explorationInterval;
         let maxTimeTimeout;
@@ -52,14 +53,15 @@ async function exploreUntil(
                 bot.entity.position.x +
                 Math.floor(Math.random() * 20 + 10) * dx;
             const y =
-                bot.entity.position.y +
-                Math.floor(Math.random() * 20 + 10) * dy;
+                dy === 0
+                    ? originY
+                    : bot.entity.position.y + Math.floor(Math.random() * 8 + 4) * dy;
             const z =
                 bot.entity.position.z +
                 Math.floor(Math.random() * 20 + 10) * dz;
-            let goal = new GoalNear(x, y, z);
+            let goal = new GoalNear(x, y, z, 2);
             if (dy === 0) {
-                goal = new GoalNearXZ(x, z);
+                goal = new GoalNearXZ(x, z, 2);
             }
             bot.pathfinder.setGoal(goal);
 
@@ -76,7 +78,8 @@ async function exploreUntil(
             }
         };
 
-        explorationInterval = setInterval(explore, 2000);
+        explore();
+        explorationInterval = setInterval(explore, 3000);
 
         maxTimeTimeout = setTimeout(() => {
             cleanUp();

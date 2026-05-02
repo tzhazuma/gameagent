@@ -69,6 +69,28 @@ If the task run exits before the cap, capture stops automatically. If the task r
 
 `direct` mode replays learned skill functions from `ckpt_voyager/skill/skills.json` directly. This is useful for recording because it preserves the real learned behavior while avoiding long idle gaps between action-model generations.
 
+For random-seed worlds, switch the server to a natural overworld and disable the fixed arena:
+
+```bash
+./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --output recordings/random-world-demo.mp4
+```
+
+That path is intentionally shorter than the deterministic flat-world demo. It uses a minimal two-task survival chain as the current random-world baseline:
+
+1. `Mine 1 wood log`
+2. `Craft 1 crafting_table`
+
+The recommended mode for this short chain is now `direct --fallback-to-agent`. In practice that keeps recordings visually active by replaying learned skills immediately, while still allowing the action agent to retry a task when direct replay cannot finish it cleanly.
+
+To validate random-world capability without recording video:
+
+```bash
+./venv/bin/python validate_random_world.py --mode direct --fallback-to-agent --seed 12345
+./venv/bin/python benchmark_random_world.py --mode direct --fallback-to-agent --seeds 12345 12346 12347
+```
+
+The current benchmark snapshot is written to `recordings/random-world-benchmark.json`. The latest rerun in this workspace succeeded on seed `12345`; the sampled failures on `12346` and `12347` were early spawn-screening rejects rather than mid-task crashes.
+
 ## Prismarine Viewer Headless MP4
 
 - Source: `prismarine-viewer/examples/headless.js`

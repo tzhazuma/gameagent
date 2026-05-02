@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import signal
@@ -25,6 +26,17 @@ DEFAULT_TASKS = [
     "Mine 8 cobblestone",
     "Craft 1 furnace",
 ]
+SHORT_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+]
+
+
+def resolve_python(root: Path) -> str:
+    venv_python = root / "venv" / "bin" / "python"
+    if venv_python.exists():
+        return str(venv_python)
+    return sys.executable
 
 
 def clear_proxy_env() -> None:
@@ -121,7 +133,44 @@ def build_parser() -> argparse.ArgumentParser:
         default="direct",
         help="Use direct learned-skill replay or the full action agent loop",
     )
+    parser.add_argument(
+        "--world-type",
+        choices=("minecraft:flat", "minecraft:normal"),
+        default="minecraft:flat",
+        help="Minecraft world type used by start_demo_server.py",
+    )
+    parser.add_argument(
+        "--seed",
+        help="Optional world seed passed to start_demo_server.py",
+    )
+    parser.add_argument(
+        "--demo-arena",
+        dest="demo_arena",
+        action="store_true",
+        help="Build the fixed demo arena before running the task sequence",
+    )
+    parser.add_argument(
+        "--no-demo-arena",
+        dest="demo_arena",
+        action="store_false",
+        help="Do not build the fixed demo arena",
+    )
+    parser.set_defaults(demo_arena=None)
+    parser.add_argument(
+        "--fallback-to-agent",
+        action="store_true",
+        help="When direct replay fails a task, retry that task through the action agent",
+    )
+    parser.add_argument(
+        "--task-preset",
+        choices=("default", "short-random"),
+        help="Optional built-in task preset",
+    )
     return parser
+
+
+def read_ready_payload(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def wait_for_ready_file(ready_file: Path, timeout: int) -> None:
@@ -178,9 +227,19 @@ def run_ffmpeg_crop(source: Path, target: Path, width: int, height: int, crop_to
 def main() -> None:
     args = build_parser().parse_args()
     clear_proxy_env()
+    if args.task_preset == "short-random":
+        args.tasks = SHORT_RANDOM_WORLD_TASKS.copy()
+    demo_arena = args.demo_arena
+    if demo_arena is None:
+        demo_arena = args.world_type == "minecraft:flat"
 
     root = Path(__file__).resolve().parent
+    python_executable = resolve_python(root)
     ready_file = root / ".demo_server" / "ready.json"
+    server_root = root / ".demo_server"
+    if args.world_type == "minecraft:normal" and (args.demo_arena is False or args.task_preset == "short-random"):
+        server_root = root / ".demo_server_random_recording"
+        ready_file = server_root / "ready.json"
     output_path = (root / args.output).resolve()
     ckpt_path = (root / args.ckpt_dir).resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -203,20 +262,31 @@ def main() -> None:
     run_incomplete = False
     try:
         with open(server_log, "w", encoding="utf-8") as server_handle:
+            server_command = [
+                python_executable,
+                "start_demo_server.py",
+                "--fresh-world",
+                "--root",
+                str(server_root),
+                "--ready-file",
+                str(ready_file),
+                "--port",
+                str(args.mc_port),
+                "--world-type",
+                args.world_type,
+            ]
+            if args.seed:
+                server_command.extend(["--seed", args.seed])
+            server_command.append("--demo-arena" if demo_arena else "--no-demo-arena")
             server_proc = subprocess.Popen(
-                [
-                    sys.executable,
-                    "start_demo_server.py",
-                    "--fresh-world",
-                    "--port",
-                    str(args.mc_port),
-                ],
+                server_command,
                 cwd=root,
                 stdout=server_handle,
                 stderr=subprocess.STDOUT,
                 text=True,
             )
         wait_for_ready_file(ready_file, 180)
+        read_ready_payload(ready_file)
 
         env = dict(os.environ)
         env["VOYAGER_VIEWER_PORT"] = str(args.viewer_port)
@@ -225,19 +295,22 @@ def main() -> None:
         with open(run_log, "w", encoding="utf-8") as run_handle:
             run_proc = subprocess.Popen(
                 [
-                    sys.executable,
-                "run_recorded_demo.py",
-                str(args.mc_port),
-                "--ckpt-dir",
-                args.ckpt_dir,
-                "--mode",
-                args.mode,
-                "--done-file",
-                str(done_file),
-                "--reset-mode",
-                "soft",
-                "--tasks",
-                *args.tasks,
+                    python_executable,
+                    "run_recorded_demo.py",
+                    str(args.mc_port),
+                    "--ckpt-dir",
+                    args.ckpt_dir,
+                    "--mode",
+                    args.mode,
+                    "--done-file",
+                    str(done_file),
+                    "--start-from-ready-file",
+                    str(ready_file),
+                    "--reset-mode",
+                    "soft",
+                    *( ["--fallback-to-agent"] if args.fallback_to_agent else [] ),
+                    "--tasks",
+                    *args.tasks,
                 ],
                 cwd=root,
                 env=env,
@@ -249,7 +322,7 @@ def main() -> None:
         viewer_url = f"http://127.0.0.1:{args.viewer_port}/"
         subprocess.run(
             [
-                sys.executable,
+                python_executable,
                 "capture_viewer.py",
                 viewer_url,
                 str(raw_output),
@@ -270,9 +343,17 @@ def main() -> None:
             check=True,
         )
 
+        if done_file.exists():
+            done_payload = read_ready_payload(done_file)
+            if not done_payload.get("completed") and done_payload.get("failed"):
+                raise RuntimeError("Random-world run failed before any task completed; not keeping a misleading recording")
+
         if run_proc.poll() is None:
-            run_incomplete = True
-            interrupt_process(run_proc)
+            try:
+                run_proc.wait(timeout=15)
+            except subprocess.TimeoutExpired:
+                run_incomplete = True
+                interrupt_process(run_proc)
 
         if args.crop_top > 0:
             run_ffmpeg_crop(raw_output, output_path, width, height, args.crop_top)

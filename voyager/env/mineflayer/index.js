@@ -23,7 +23,16 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
 app.post("/start", (req, res) => {
-    if (bot) onDisconnect("Restarting bot");
+    if (bot) {
+        try {
+            if (bot.viewer) {
+                bot.viewer.close();
+            }
+            bot.end();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     bot = null;
     console.log(req.body);
     let responseSent = false;
@@ -329,6 +338,9 @@ app.post("/step", async (req, res) => {
 
     // Set up pathfinder
     const movements = new Movements(activeBot, mcData);
+    movements.allowParkour = false;
+    movements.allowSprinting = false;
+    movements.allow1by1towers = false;
     activeBot.pathfinder.setMovements(movements);
 
     activeBot.globalTickCounter = 0;

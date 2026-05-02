@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Start a local offline Minecraft server with a small Voyager demo arena."""
+"""Start a local offline Minecraft server for Voyager demos or random-world tests."""
 
 from __future__ import annotations
 
@@ -38,6 +38,17 @@ def offline_uuid(name: str) -> str:
 
 def ensure_server_jar(root: Path, force_download: bool) -> Path:
     jar_path = root / "server.jar"
+    cached_jar = DEFAULT_ROOT / "server.jar"
+    if jar_path.exists() and sha1sum(jar_path) != SERVER_SHA1:
+        jar_path.unlink()
+    if (
+        not force_download
+        and not jar_path.exists()
+        and cached_jar.exists()
+        and sha1sum(cached_jar) == SERVER_SHA1
+    ):
+        root.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(cached_jar, jar_path)
     if force_download or not jar_path.exists() or sha1sum(jar_path) != SERVER_SHA1:
         root.mkdir(parents=True, exist_ok=True)
         with urllib.request.urlopen(SERVER_URL) as response, open(jar_path, "wb") as handle:
@@ -58,9 +69,16 @@ def reset_world(root: Path) -> None:
             target.unlink()
 
 
-def write_support_files(root: Path, port: int) -> None:
+def write_support_files(root: Path, port: int, world_type: str, seed: str | None) -> None:
     root.mkdir(parents=True, exist_ok=True)
     (root / "eula.txt").write_text("eula=true\n", encoding="utf-8")
+    if seed is not None:
+        level_seed = seed
+    elif world_type == "minecraft:flat":
+        level_seed = "voyager-demo"
+    else:
+        level_seed = ""
+    generate_structures = "false" if world_type == "minecraft:flat" else "true"
     server_properties = "\n".join(
         [
             "allow-flight=true",
@@ -70,9 +88,9 @@ def write_support_files(root: Path, port: int) -> None:
             "enforce-secure-profile=false",
             "force-gamemode=false",
             "gamemode=creative",
-            "generate-structures=false",
-            "level-seed=voyager-demo",
-            "level-type=minecraft:flat",
+            f"generate-structures={generate_structures}",
+            f"level-seed={level_seed}",
+            f"level-type={world_type}",
             "max-tick-time=-1",
             "motd=Voyager Demo Server",
             "online-mode=false",
@@ -143,6 +161,33 @@ def prepare_arena(process: subprocess.Popen[str], ready_file: Path, port: int) -
     ready_payload = {
         "port": port,
         "position": {"x": 0.5, "y": float(ARENA_Y + 1), "z": 0.5},
+        "world_type": "minecraft:flat",
+        "seed": "voyager-demo",
+        "demo_arena": True,
+    }
+    ready_file.write_text(json.dumps(ready_payload, indent=2) + "\n", encoding="utf-8")
+    print(f"DEMO_SERVER_READY {ready_payload}")
+
+
+def prepare_random_world(process: subprocess.Popen[str], ready_file: Path, port: int, seed: str | None) -> None:
+    commands = [
+        "gamerule commandBlockOutput false",
+        "gamerule doDaylightCycle false",
+        "gamerule doWeatherCycle false",
+        "gamerule doMobSpawning false",
+        "gamerule fallDamage false",
+        "gamerule keepInventory true",
+        "time set noon",
+        "weather clear",
+    ]
+    for command in commands:
+        send_command(process, command)
+    ready_payload = {
+        "port": port,
+        "position": None,
+        "world_type": "minecraft:normal",
+        "seed": seed,
+        "demo_arena": False,
     }
     ready_file.write_text(json.dumps(ready_payload, indent=2) + "\n", encoding="utf-8")
     print(f"DEMO_SERVER_READY {ready_payload}")
@@ -183,6 +228,29 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Delete the existing demo world before starting",
     )
+    parser.add_argument(
+        "--world-type",
+        choices=("minecraft:flat", "minecraft:normal"),
+        default="minecraft:flat",
+        help="Minecraft level-type to generate",
+    )
+    parser.add_argument(
+        "--seed",
+        help="Optional level seed; defaults to voyager-demo for flat worlds",
+    )
+    parser.add_argument(
+        "--demo-arena",
+        dest="demo_arena",
+        action="store_true",
+        help="Build the fixed demo arena after the server starts",
+    )
+    parser.add_argument(
+        "--no-demo-arena",
+        dest="demo_arena",
+        action="store_false",
+        help="Do not build the fixed demo arena",
+    )
+    parser.set_defaults(demo_arena=None)
     return parser.parse_args()
 
 
@@ -191,13 +259,16 @@ def main() -> int:
     root = args.root.resolve()
     ready_file = args.ready_file.resolve()
     log_path = root / "server.log"
+    demo_arena = args.demo_arena
+    if demo_arena is None:
+        demo_arena = args.world_type == "minecraft:flat"
     if ready_file.exists():
         ready_file.unlink()
 
     if args.fresh_world:
         reset_world(root)
 
-    write_support_files(root, args.port)
+    write_support_files(root, args.port, args.world_type, args.seed)
     jar_path = ensure_server_jar(root, args.force_download)
 
     command = [
@@ -234,7 +305,10 @@ def main() -> int:
                 log_file.flush()
                 if not ready and "Done (" in line:
                     ready = True
-                    prepare_arena(process, ready_file, args.port)
+                    if demo_arena:
+                        prepare_arena(process, ready_file, args.port)
+                    else:
+                        prepare_random_world(process, ready_file, args.port, args.seed)
         except KeyboardInterrupt:
             print("Stopping demo server...")
             try:

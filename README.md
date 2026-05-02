@@ -21,13 +21,27 @@ Inspection showed that this repo and the local `~/.minecraft/mods` setup did not
 - local offline demo server: `start_demo_server.py`
 - Chromium/Xvfb viewer recorder: `capture_viewer.py`
 - one-command pipeline: `record_demo_pipeline.py`
+- random-world validation: `validate_random_world.py`
+- multi-seed benchmark: `benchmark_random_world.py`
 - recorded sample artifact: `recordings/voyager-demo.mp4`
 
 The generated site now includes an interactive explorer with filtering, route visualization, and per-task snapshot details from the real `ckpt_voyager` data.
 
-This repo now also contains a real recorded gameplay artifact generated locally from the prismarine viewer pipeline: `recordings/voyager-demo.mp4`.
+This repo now also contains real recorded gameplay artifacts generated locally from the prismarine viewer pipeline: `recordings/voyager-demo.mp4` and `recordings/random-world-demo.mp4`.
 
 The recommended recording path is now `record_demo_pipeline.py` in `direct` mode, which replays the learned `ckpt_voyager` skill functions directly so the video stays visually active instead of spending most of its time waiting for a fresh action-model turn. The pipeline records up to its configured duration and stops early when the scripted run exits.
+
+The repo now also supports random-seed survival validation without the fixed arena. For random worlds, the best-performing baseline in this branch is a short `direct` replay chain with `--fallback-to-agent`, so the learned `mineWoodLog` and `craftCraftingTable` skills run immediately while still allowing an agent retry path when direct replay is not enough.
+
+Examples:
+
+```bash
+./venv/bin/python validate_random_world.py --mode direct --fallback-to-agent --seed 12345
+./venv/bin/python benchmark_random_world.py --mode direct --fallback-to-agent --seeds 12345 12346 12347
+./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --output recordings/random-world-demo.mp4
+```
+
+The current sampled benchmark artifact is `recordings/random-world-benchmark.json`. On the latest rerun across seeds `12345`, `12346`, and `12347`, seed `12345` completed the two-task chain cleanly while the other two seeds were rejected by spawn screening before the run started.
 
 These two charts are generated from the current real checkpoint:
 
