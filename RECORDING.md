@@ -119,13 +119,13 @@ The vendored `prismarine-viewer` dependency already contains the headless code p
 ## Browser Plus Virtual Display Capture
 
 - Best for: recording the live viewer without `node-canvas-webgl`
-- Method: run `Xvfb`, open the prismarine viewer in Firefox inside that display, capture frames or screen output, then assemble a video with `ffmpeg`
+- Method: run `Xvfb`, open the prismarine viewer in a Chromium-based browser inside that display, and capture the virtual display directly with `ffmpeg`
 
 This is feasible in the current environment because it already has:
 
-- `firefox`
+- a Chromium-based browser
 - `Xvfb`
-- ImageMagick `import`
+- `ffmpeg`
 
 ## OS-Level Screen Recording
 
