@@ -89,7 +89,7 @@ To validate random-world capability without recording video:
 ./venv/bin/python benchmark_random_world.py --mode direct --fallback-to-agent --seeds 12345 12346 12347
 ```
 
-The current benchmark snapshot is written to `recordings/random-world-benchmark.json`. The latest rerun in this workspace succeeded on seed `12345`; the sampled failures on `12346` and `12347` were early spawn-screening rejects rather than mid-task crashes.
+The current benchmark snapshot is written to `recordings/random-world-benchmark.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345`, `12346`, and `12347` after fixing the spawn-screening flow so random-world runs can relocate before failing the initial tree check.
 
 ## Prismarine Viewer Headless MP4
 

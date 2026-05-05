@@ -620,9 +620,10 @@ def main() -> None:
         voyager.last_events = voyager.env.reset(
             options=reset_options
         )
-        spawn_ok, spawn_reason = validate_random_world_spawn(voyager.last_events, args.tasks)
-        if spawn_ok and args.spawn_from_world:
+        if args.spawn_from_world:
             spawn_ok, spawn_reason = screen_spawn_for_tree(voyager, args.tasks)
+        else:
+            spawn_ok, spawn_reason = validate_random_world_spawn(voyager.last_events, args.tasks)
         if not spawn_ok:
             failed = [args.tasks[0]] if args.tasks else []
             terminal_error = spawn_reason

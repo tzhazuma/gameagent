@@ -2,9 +2,9 @@
   "mode": "direct",
   "fallback_to_agent": true,
   "seed_count": 3,
-  "success_count": 1,
-  "success_rate": 0.3333333333333333,
-  "duration_seconds": 349.55,
+  "success_count": 3,
+  "success_rate": 1.0,
+  "duration_seconds": 305.77,
   "results": [
     {
       "seed": "12345",
@@ -39,7 +39,7 @@
     {
       "seed": "12346",
       "returncode": 0,
-      "stdout": "{\n  \"seed\": \"12346\",\n  \"label\": \"random-world-12346\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 3,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [],\n  \"failed\": [\n    \"Mine 1 wood log\"\n  ],\n  \"success\": false,\n  \"server_log\": \"recordings/random-world-12346-server.log\",\n  \"run_log\": \"recordings/random-world-12346-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"error\": \"spawn area does not expose a nearby tree/log block\"\n}\n",
+      "stdout": "{\n  \"seed\": \"12346\",\n  \"label\": \"random-world-12346\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-12346-server.log\",\n  \"run_log\": \"recordings/random-world-12346-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false\n}\n",
       "stderr": "",
       "result": {
         "seed": "12346",
@@ -48,28 +48,28 @@
         "fallback_to_agent": true,
         "timed_out": false,
         "timeout_seconds": 300,
-        "attempt": 3,
+        "attempt": 1,
         "max_attempts": 3,
         "tasks": [
           "Mine 1 wood log",
           "Craft 1 crafting_table"
         ],
-        "completed": [],
-        "failed": [
-          "Mine 1 wood log"
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
         ],
-        "success": false,
+        "failed": [],
+        "success": true,
         "server_log": "recordings/random-world-12346-server.log",
         "run_log": "recordings/random-world-12346-run.log",
         "returncode": 0,
-        "interrupted": false,
-        "error": "spawn area does not expose a nearby tree/log block"
+        "interrupted": false
       }
     },
     {
       "seed": "12347",
       "returncode": 0,
-      "stdout": "{\n  \"seed\": \"12347\",\n  \"label\": \"random-world-12347\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 3,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [],\n  \"failed\": [\n    \"Mine 1 wood log\"\n  ],\n  \"success\": false,\n  \"server_log\": \"recordings/random-world-12347-server.log\",\n  \"run_log\": \"recordings/random-world-12347-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"error\": \"spawn area does not expose a nearby tree/log block\"\n}\n",
+      "stdout": "{\n  \"seed\": \"12347\",\n  \"label\": \"random-world-12347\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-12347-server.log\",\n  \"run_log\": \"recordings/random-world-12347-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false\n}\n",
       "stderr": "",
       "result": {
         "seed": "12347",
@@ -78,22 +78,22 @@
         "fallback_to_agent": true,
         "timed_out": false,
         "timeout_seconds": 300,
-        "attempt": 3,
+        "attempt": 1,
         "max_attempts": 3,
         "tasks": [
           "Mine 1 wood log",
           "Craft 1 crafting_table"
         ],
-        "completed": [],
-        "failed": [
-          "Mine 1 wood log"
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
         ],
-        "success": false,
+        "failed": [],
+        "success": true,
         "server_log": "recordings/random-world-12347-server.log",
         "run_log": "recordings/random-world-12347-run.log",
         "returncode": 0,
-        "interrupted": false,
-        "error": "spawn area does not expose a nearby tree/log block"
+        "interrupted": false
       }
     }
   ]

@@ -5,20 +5,20 @@
   "fallback_to_agent": true,
   "timed_out": false,
   "timeout_seconds": 300,
-  "attempt": 3,
+  "attempt": 1,
   "max_attempts": 3,
   "tasks": [
     "Mine 1 wood log",
     "Craft 1 crafting_table"
   ],
-  "completed": [],
-  "failed": [
-    "Mine 1 wood log"
+  "completed": [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table"
   ],
-  "success": false,
+  "failed": [],
+  "success": true,
   "server_log": "recordings/random-world-12346-server.log",
   "run_log": "recordings/random-world-12346-run.log",
   "returncode": 0,
-  "interrupted": false,
-  "error": "spawn area does not expose a nearby tree/log block"
+  "interrupted": false
 }

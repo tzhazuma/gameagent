@@ -41,7 +41,7 @@ Examples:
 ./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --output recordings/random-world-demo.mp4
 ```
 
-The current sampled benchmark artifact is `recordings/random-world-benchmark.json`. On the latest rerun across seeds `12345`, `12346`, and `12347`, seed `12345` completed the two-task chain cleanly while the other two seeds were rejected by spawn screening before the run started.
+The current sampled benchmark artifact is `recordings/random-world-benchmark.json`. On the latest rerun across seeds `12345`, `12346`, and `12347`, all three seeds completed the two-task random-world chain successfully. The key fix was allowing spawn screening to relocate the bot before declaring the run failed when the initial spawn did not expose visible logs.
 
 These two charts are generated from the current real checkpoint:
 
