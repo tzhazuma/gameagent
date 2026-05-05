@@ -1,12 +1,12 @@
 {
-  "seed": "12345",
-  "label": "random-world-12345",
+  "seed": "12350",
+  "label": "random-world-12350",
   "task_preset": "short-random",
   "mode": "direct",
   "fallback_to_agent": true,
   "timed_out": false,
   "timeout_seconds": 300,
-  "attempt": 1,
+  "attempt": 2,
   "max_attempts": 3,
   "tasks": [
     "Mine 1 wood log",
@@ -18,8 +18,8 @@
   ],
   "failed": [],
   "success": true,
-  "server_log": "recordings/random-world-12345-server.log",
-  "run_log": "recordings/random-world-12345-run.log",
+  "server_log": "recordings/random-world-12350-server.log",
+  "run_log": "recordings/random-world-12350-run.log",
   "returncode": 0,
   "interrupted": false
 }

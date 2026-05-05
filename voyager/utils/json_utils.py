@@ -2,6 +2,7 @@ import json
 import re
 from typing import Any, Dict, Union
 from .file_utils import f_join
+from .file_utils import f_mkdir_in_path
 
 
 def json_load(*file_path, **kwargs):
@@ -16,6 +17,7 @@ def json_loads(string, **kwargs):
 
 def json_dump(data, *file_path, **kwargs):
     file_path = f_join(file_path)
+    f_mkdir_in_path(file_path)
     with open(file_path, "w") as fp:
         json.dump(data, fp, **kwargs)
 

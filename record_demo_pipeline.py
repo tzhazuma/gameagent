@@ -30,6 +30,11 @@ SHORT_RANDOM_WORLD_TASKS = [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
 ]
+LONG_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Craft 4 sticks",
+]
 
 
 def resolve_python(root: Path) -> str:
@@ -163,8 +168,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--task-preset",
-        choices=("default", "short-random"),
+        choices=("default", "short-random", "long-random"),
         help="Optional built-in task preset",
+    )
+    parser.add_argument(
+        "--max-attempts",
+        type=int,
+        default=1,
+        help="How many fresh recording attempts to try before giving up",
     )
     return parser
 
@@ -229,6 +240,8 @@ def main() -> None:
     clear_proxy_env()
     if args.task_preset == "short-random":
         args.tasks = SHORT_RANDOM_WORLD_TASKS.copy()
+    elif args.task_preset == "long-random":
+        args.tasks = LONG_RANDOM_WORLD_TASKS.copy()
     demo_arena = args.demo_arena
     if demo_arena is None:
         demo_arena = args.world_type == "minecraft:flat"
@@ -237,7 +250,7 @@ def main() -> None:
     python_executable = resolve_python(root)
     ready_file = root / ".demo_server" / "ready.json"
     server_root = root / ".demo_server"
-    if args.world_type == "minecraft:normal" and (args.demo_arena is False or args.task_preset == "short-random"):
+    if args.world_type == "minecraft:normal" and (args.demo_arena is False or args.task_preset in {"short-random", "long-random"}):
         server_root = root / ".demo_server_random_recording"
         ready_file = server_root / "ready.json"
     output_path = (root / args.output).resolve()
@@ -248,127 +261,157 @@ def main() -> None:
     run_log = output_path.with_name(output_path.stem + "-run.log")
     done_file = output_path.with_name(output_path.stem + ".done")
     width, height = args.size
+    max_attempts = max(1, args.max_attempts)
+    last_error: Exception | None = None
 
-    if ready_file.exists():
-        ready_file.unlink()
-    if ckpt_path.exists():
-        shutil.rmtree(ckpt_path, ignore_errors=True)
-    for path in (output_path, raw_output, server_log, run_log, done_file):
-        if path.exists():
-            path.unlink()
+    for attempt in range(1, max_attempts + 1):
+        if max_attempts > 1:
+            print(f"Recording attempt {attempt}/{max_attempts}")
 
-    server_proc = None
-    run_proc = None
-    run_incomplete = False
-    try:
-        with open(server_log, "w", encoding="utf-8") as server_handle:
-            server_command = [
-                python_executable,
-                "start_demo_server.py",
-                "--fresh-world",
-                "--root",
-                str(server_root),
-                "--ready-file",
-                str(ready_file),
-                "--port",
-                str(args.mc_port),
-                "--world-type",
-                args.world_type,
-            ]
-            if args.seed:
-                server_command.extend(["--seed", args.seed])
-            server_command.append("--demo-arena" if demo_arena else "--no-demo-arena")
-            server_proc = subprocess.Popen(
-                server_command,
-                cwd=root,
-                stdout=server_handle,
-                stderr=subprocess.STDOUT,
-                text=True,
-            )
-        wait_for_ready_file(ready_file, 180)
-        read_ready_payload(ready_file)
+        if ready_file.exists():
+            ready_file.unlink()
+        if ckpt_path.exists():
+            shutil.rmtree(ckpt_path, ignore_errors=True)
+        for path in (output_path, raw_output, server_log, run_log, done_file):
+            if path.exists():
+                path.unlink()
 
-        env = dict(os.environ)
-        env["VOYAGER_VIEWER_PORT"] = str(args.viewer_port)
-        env["VOYAGER_VIEWER_DRAW_PATH"] = "1"
+        server_proc = None
+        run_proc = None
+        run_incomplete = False
+        try:
+            with open(server_log, "w", encoding="utf-8") as server_handle:
+                server_command = [
+                    python_executable,
+                    "start_demo_server.py",
+                    "--fresh-world",
+                    "--root",
+                    str(server_root),
+                    "--ready-file",
+                    str(ready_file),
+                    "--port",
+                    str(args.mc_port),
+                    "--world-type",
+                    args.world_type,
+                ]
+                if args.seed:
+                    server_command.extend(["--seed", args.seed])
+                server_command.append("--demo-arena" if demo_arena else "--no-demo-arena")
+                server_proc = subprocess.Popen(
+                    server_command,
+                    cwd=root,
+                    stdout=server_handle,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                )
+            wait_for_ready_file(ready_file, 180)
+            read_ready_payload(ready_file)
 
-        with open(run_log, "w", encoding="utf-8") as run_handle:
-            run_proc = subprocess.Popen(
+            env = dict(os.environ)
+            env["VOYAGER_VIEWER_PORT"] = str(args.viewer_port)
+            env["VOYAGER_VIEWER_DRAW_PATH"] = "1"
+
+            with open(run_log, "w", encoding="utf-8") as run_handle:
+                run_proc = subprocess.Popen(
+                    [
+                        python_executable,
+                        "run_recorded_demo.py",
+                        str(args.mc_port),
+                        "--ckpt-dir",
+                        args.ckpt_dir,
+                        "--mode",
+                        args.mode,
+                        "--done-file",
+                        str(done_file),
+                        "--start-from-ready-file",
+                        str(ready_file),
+                        "--reset-mode",
+                        "soft",
+                        *(["--fallback-to-agent"] if args.fallback_to_agent else []),
+                        "--tasks",
+                        *args.tasks,
+                    ],
+                    cwd=root,
+                    env=env,
+                    stdout=run_handle,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                )
+
+            viewer_url = f"http://127.0.0.1:{args.viewer_port}/"
+            subprocess.run(
                 [
                     python_executable,
-                    "run_recorded_demo.py",
-                    str(args.mc_port),
-                    "--ckpt-dir",
-                    args.ckpt_dir,
-                    "--mode",
-                    args.mode,
-                    "--done-file",
+                    "capture_viewer.py",
+                    viewer_url,
+                    str(raw_output),
+                    "--duration",
+                    str(args.duration),
+                    "--wait-timeout",
+                    str(args.wait_timeout),
+                    "--page-settle-seconds",
+                    str(args.page_settle_seconds),
+                    "--stop-when-file-exists",
                     str(done_file),
-                    "--start-from-ready-file",
-                    str(ready_file),
-                    "--reset-mode",
-                    "soft",
-                    *( ["--fallback-to-agent"] if args.fallback_to_agent else [] ),
-                    "--tasks",
-                    *args.tasks,
+                    "--display",
+                    args.display,
+                    "--size",
+                    f"{width}x{height}",
                 ],
                 cwd=root,
-                env=env,
-                stdout=run_handle,
-                stderr=subprocess.STDOUT,
-                text=True,
+                check=True,
             )
 
-        viewer_url = f"http://127.0.0.1:{args.viewer_port}/"
-        subprocess.run(
-            [
-                python_executable,
-                "capture_viewer.py",
-                viewer_url,
-                str(raw_output),
-                "--duration",
-                str(args.duration),
-                "--wait-timeout",
-                str(args.wait_timeout),
-                "--page-settle-seconds",
-                str(args.page_settle_seconds),
-                "--stop-when-file-exists",
-                str(done_file),
-                "--display",
-                args.display,
-                "--size",
-                f"{width}x{height}",
-            ],
-            cwd=root,
-            check=True,
-        )
+            if not done_file.exists():
+                raise RuntimeError(
+                    "capture ended before the recorded task sequence finished; increase --duration to capture the full run"
+                )
 
-        if done_file.exists():
             done_payload = read_ready_payload(done_file)
-            if not done_payload.get("completed") and done_payload.get("failed"):
-                raise RuntimeError("Random-world run failed before any task completed; not keeping a misleading recording")
+            completed = done_payload.get("completed", [])
+            failed = done_payload.get("failed", [])
+            if len(completed) != len(args.tasks) or failed:
+                error = done_payload.get("error")
+                message = f"recorded run failed: completed={completed}, failed={failed}"
+                if error:
+                    message = f"{message}, error={error}"
+                raise RuntimeError(message)
 
-        if run_proc.poll() is None:
-            try:
-                run_proc.wait(timeout=15)
-            except subprocess.TimeoutExpired:
-                run_incomplete = True
-                interrupt_process(run_proc)
+            if run_proc.poll() is None:
+                try:
+                    run_proc.wait(timeout=15)
+                except subprocess.TimeoutExpired:
+                    run_incomplete = True
+                    interrupt_process(run_proc)
 
-        if args.crop_top > 0:
-            run_ffmpeg_crop(raw_output, output_path, width, height, args.crop_top)
+            if args.crop_top > 0:
+                run_ffmpeg_crop(raw_output, output_path, width, height, args.crop_top)
+                raw_output.unlink(missing_ok=True)
+            else:
+                raw_output.replace(output_path)
+
+            print(f"Wrote cleaned recording to {output_path}")
+            print(f"Run log: {run_log}")
+            print(f"Server log: {server_log}")
+            if run_incomplete:
+                print("Warning: capture ended before the recorded task sequence finished; increase --duration to capture the full run.")
+            return
+        except KeyboardInterrupt:
+            raise
+        except Exception as exc:
+            last_error = exc
             raw_output.unlink(missing_ok=True)
-        else:
-            raw_output.replace(output_path)
+            output_path.unlink(missing_ok=True)
+            if attempt == max_attempts:
+                raise
+            print(f"Attempt {attempt}/{max_attempts} failed: {exc}")
+            print("Retrying with a fresh world...")
+        finally:
+            interrupt_process(run_proc)
+            interrupt_process(server_proc)
 
-        print(f"Wrote cleaned recording to {output_path}")
-        print(f"Run log: {run_log}")
-        print(f"Server log: {server_log}")
-        if run_incomplete:
-            print("Warning: capture ended before the recorded task sequence finished; increase --duration to capture the full run.")
-    finally:
-        interrupt_process(run_proc)
-        interrupt_process(server_proc)
+    if last_error is not None:
+        raise last_error
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 {
-  "seed": "12345",
-  "label": "random-world-12345",
+  "seed": "12349",
+  "label": "random-world-12349",
   "task_preset": "short-random",
   "mode": "direct",
   "fallback_to_agent": true,
@@ -18,8 +18,8 @@
   ],
   "failed": [],
   "success": true,
-  "server_log": "recordings/random-world-12345-server.log",
-  "run_log": "recordings/random-world-12345-run.log",
+  "server_log": "recordings/random-world-12349-server.log",
+  "run_log": "recordings/random-world-12349-run.log",
   "returncode": 0,
   "interrupted": false
 }

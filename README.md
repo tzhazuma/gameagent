@@ -27,7 +27,7 @@ Inspection showed that this repo and the local `~/.minecraft/mods` setup did not
 
 The generated site now includes an interactive explorer with filtering, route visualization, and per-task snapshot details from the real `ckpt_voyager` data.
 
-This repo now also contains real recorded gameplay artifacts generated locally from the prismarine viewer pipeline: `recordings/voyager-demo.mp4` and `recordings/random-world-demo.mp4`.
+This repo now also contains real recorded gameplay artifacts generated locally from the prismarine viewer pipeline: `recordings/voyager-demo.mp4`, `recordings/random-world-demo.mp4`, and `recordings/random-world-long-demo.mp4`.
 
 The recommended recording path is now `record_demo_pipeline.py` in `direct` mode, which replays the learned `ckpt_voyager` skill functions directly so the video stays visually active instead of spending most of its time waiting for a fresh action-model turn. The pipeline records up to its configured duration and stops early when the scripted run exits.
 
@@ -37,11 +37,16 @@ Examples:
 
 ```bash
 ./venv/bin/python validate_random_world.py --mode direct --fallback-to-agent --seed 12345
-./venv/bin/python benchmark_random_world.py --mode direct --fallback-to-agent --seeds 12345 12346 12347
+./venv/bin/python benchmark_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350
 ./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --output recordings/random-world-demo.mp4
+./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset long-random --mode direct --fallback-to-agent --seed 12346 --max-attempts 3 --output recordings/random-world-long-demo.mp4
 ```
 
-The current sampled benchmark artifact is `recordings/random-world-benchmark.json`. On the latest rerun across seeds `12345`, `12346`, and `12347`, all three seeds completed the two-task random-world chain successfully. The key fix was allowing spawn screening to relocate the bot before declaring the run failed when the initial spawn did not expose visible logs.
+The current short-chain benchmark artifact is `recordings/random-world-benchmark-6seeds.json`. On the latest rerun across seeds `12345` through `12350`, all six seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`.
+
+The current exploratory long-chain benchmark artifact is `recordings/random-world-long-benchmark.json`. For the three-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Craft 4 sticks`, the latest rerun succeeded on `1/3` sampled seeds, with seed `12346` serving as the current reproducible recording seed.
+
+For random-world recording, the pipeline now supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact.
 
 These two charts are generated from the current real checkpoint:
 

@@ -28,6 +28,11 @@ SHORT_RANDOM_WORLD_TASKS = [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
 ]
+LONG_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Craft 4 sticks",
+]
 DEFAULT_POSITION = {"x": 0.5, "y": 81.0, "z": 0.5}
 TASK_TO_SKILL = {
     "Mine 1 wood log": "mineWoodLog",
@@ -62,6 +67,65 @@ WOOD_PLANK_NAMES = [
 ]
 TASK_ITEM_ALIASES = {
     "sticks": "stick",
+}
+DIRECT_SKILL_OVERRIDES = {
+    "craftFourSticks": """
+async function craftFourSticks(bot) {
+  async function craftInventoryItem(bot, name, count = 1) {
+    const item = mcData.itemsByName[name];
+    if (!item) {
+      throw new Error(`Unknown item: ${name}`);
+    }
+    const recipe = bot.recipesFor(item.id, null, 1, null)[0];
+    if (!recipe) {
+      throw new Error(`No inventory crafting recipe found for ${name}`);
+    }
+    await bot.craft(recipe, count, null);
+  }
+
+  const stickItem = mcData.itemsByName["stick"];
+  const currentSticks = bot.inventory.findInventoryItem(stickItem.id);
+  if (currentSticks && currentSticks.count >= 4) {
+    bot.chat(`I already have ${currentSticks.count} sticks. No crafting needed.`);
+    return;
+  }
+
+  const plankNames = ["oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks", "mangrove_planks"];
+  const logNames = ["oak_log", "spruce_log", "birch_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log"];
+  let plankCount = 0;
+  for (const name of plankNames) {
+    const item = mcData.itemsByName[name];
+    if (!item) continue;
+    const invItem = bot.inventory.findInventoryItem(item.id);
+    if (invItem) plankCount += invItem.count;
+  }
+
+  if (plankCount < 2) {
+    let logName = null;
+    for (const name of logNames) {
+      const item = mcData.itemsByName[name];
+      if (!item) continue;
+      const invItem = bot.inventory.findInventoryItem(item.id);
+      if (invItem) {
+        logName = name;
+        break;
+      }
+    }
+    if (!logName) {
+      bot.chat("Not enough wood to craft sticks.");
+      return;
+    }
+    const plankName = logName.replace("_log", "_planks");
+    bot.chat(`Crafting ${plankName} from ${logName} first...`);
+    await craftInventoryItem(bot, plankName, 1);
+  }
+
+  bot.chat("Crafting 4 sticks from 2 wooden planks...");
+  await craftInventoryItem(bot, "stick", 1);
+  const result = bot.inventory.findInventoryItem(stickItem.id);
+  bot.chat(`Done! I now have ${result ? result.count : 0} sticks.`);
+}
+""",
 }
 
 
@@ -233,6 +297,12 @@ def total_inventory_count(snapshot: dict, item_names: list[str]) -> int:
     return sum(inventory_count(snapshot, item_name) for item_name in item_names)
 
 
+def task_item_total(snapshot: dict, item_name: str) -> int:
+    if item_name == "wood_log":
+        return total_inventory_count(snapshot, WOOD_LOG_NAMES)
+    return inventory_count(snapshot, item_name)
+
+
 def nearby_blocks(snapshot: dict) -> set[str]:
     blocks = set()
     for field in ("voxels", "blockRecords"):
@@ -321,9 +391,9 @@ def direct_precheck_failure(task: str, snapshot: dict) -> str | None:
         return "need at least 4 planks or 1 log before direct crafting_table replay"
 
     if task == "Craft 4 sticks":
-        if stick_count >= 4 or total_planks >= 2:
+        if stick_count >= 4 or total_planks >= 2 or total_logs >= 1:
             return None
-        return "need at least 2 planks before direct stick crafting"
+        return "need at least 2 planks or 1 log before direct stick crafting"
 
     if task == "Craft 1 wooden_pickaxe":
         if not has_table:
@@ -399,24 +469,31 @@ def record_task_outcome(
         progress_callback()
 
 
-def validate_direct_task(task: str, events) -> tuple[bool, str]:
+def validate_direct_task(task: str, before_snapshot: dict, events) -> tuple[bool, str]:
     snapshot = final_snapshot(events)
     match = re.match(r"^(Mine|Craft) (\d+) (.+)$", task)
     if match:
-        _, amount_text, raw_item = match.groups()
+        action, amount_text, raw_item = match.groups()
         amount = int(amount_text)
         item_name = TASK_ITEM_ALIASES.get(raw_item, raw_item).replace(" ", "_")
-        if item_name == "wood_log":
-            total_logs = sum(inventory_count(snapshot, name) for name in WOOD_LOG_NAMES)
-            if total_logs >= amount:
+        before_total = task_item_total(before_snapshot, item_name)
+        after_total = task_item_total(snapshot, item_name)
+        if action == "Mine":
+            if after_total >= before_total + amount:
                 return True, ""
-            return False, f"expected at least {amount} wood log, found {total_logs}"
-        item_total = inventory_count(snapshot, item_name)
-        if item_total >= amount:
+            if before_total < amount and after_total >= amount:
+                return True, ""
+            return False, (
+                f"expected to mine {amount} {item_name}, inventory moved from {before_total} to {after_total}"
+            )
+        if item_name == "stick":
+            if after_total >= before_total + amount:
+                return True, ""
+        if after_total >= amount:
             return True, ""
         if has_equipped_item(snapshot, item_name):
             return True, ""
-        return False, f"expected at least {amount} {item_name}, found {item_total}"
+        return False, f"expected at least {amount} {item_name}, found {after_total}"
 
     match = re.match(r"^Equip (.+)$", task)
     if match:
@@ -437,7 +514,8 @@ def run_direct_sequence(
     progress_callback: Callable[[], None] | None = None,
 ) -> None:
     for task in tasks:
-        precheck_failure = direct_precheck_failure(task, final_snapshot(voyager.last_events))
+        before_snapshot = final_snapshot(voyager.last_events)
+        precheck_failure = direct_precheck_failure(task, before_snapshot)
         if precheck_failure:
             if fallback_to_agent:
                 print(f"Direct precheck failed, retrying with agent: {task}: {precheck_failure}")
@@ -476,10 +554,13 @@ def run_direct_sequence(
             print(f"No direct skill mapping for task: {task}")
             break
         print(f"Running learned skill {skill_name} for task: {task}")
+        programs = voyager.skill_manager.programs
+        if skill_name in DIRECT_SKILL_OVERRIDES:
+            programs = programs + "\n\n" + DIRECT_SKILL_OVERRIDES[skill_name]
         try:
             events = voyager.env.step(
                 f"await {skill_name}(bot)",
-                programs=voyager.skill_manager.programs,
+                programs=programs,
             )
         except Exception as exc:
             if fallback_to_agent:
@@ -519,7 +600,7 @@ def run_direct_sequence(
             )
             print(f"Task produced onError events: {task}")
             break
-        valid, reason = validate_direct_task(task, events)
+        valid, reason = validate_direct_task(task, before_snapshot, events)
         if not valid:
             if fallback_to_agent:
                 print(f"Task validation failed in direct mode, retrying with agent: {task}: {reason}")

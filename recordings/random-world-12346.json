@@ -1,6 +1,7 @@
 {
   "seed": "12346",
   "label": "random-world-12346",
+  "task_preset": "short-random",
   "mode": "direct",
   "fallback_to_agent": true,
   "timed_out": false,

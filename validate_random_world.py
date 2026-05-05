@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a short random-world validation sequence and print a compact summary."""
+"""Run a random-world validation sequence and print a compact summary."""
 
 from __future__ import annotations
 
@@ -13,10 +13,19 @@ import time
 from pathlib import Path
 
 
-SHORT_TASKS = [
+SHORT_RANDOM_WORLD_TASKS = [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
 ]
+LONG_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Craft 4 sticks",
+]
+TASK_PRESETS = {
+    "short-random": SHORT_RANDOM_WORLD_TASKS,
+    "long-random": LONG_RANDOM_WORLD_TASKS,
+}
 
 
 def resolve_python(root: Path) -> str:
@@ -100,6 +109,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", help="Optional random-world seed")
     parser.add_argument(
+        "--server-root",
+        help="Optional isolated server root for this validation run",
+    )
+    parser.add_argument(
+        "--task-preset",
+        choices=tuple(TASK_PRESETS.keys()),
+        default="short-random",
+        help="Built-in random-world task chain to validate",
+    )
+    parser.add_argument(
         "--mode",
         choices=("agent", "direct"),
         default="agent",
@@ -143,7 +162,12 @@ def main() -> None:
     args = build_parser().parse_args()
     root = Path(__file__).resolve().parent
     python_executable = resolve_python(root)
-    server_root = root / ".demo_server_random_validation"
+    tasks = TASK_PRESETS[args.task_preset]
+    if args.server_root:
+        requested_server_root = Path(args.server_root)
+        server_root = requested_server_root if requested_server_root.is_absolute() else root / requested_server_root
+    else:
+        server_root = root / ".demo_server_random_validation"
     ready_file = server_root / "ready.json"
     recordings_root = root / "recordings"
     done_file = recordings_root / f"{args.label}.done"
@@ -200,9 +224,10 @@ def main() -> None:
                     "timeout_seconds": args.timeout_seconds,
                     "attempt": attempt,
                     "max_attempts": args.max_attempts,
-                    "tasks": SHORT_TASKS,
+                    "task_preset": args.task_preset,
+                    "tasks": tasks,
                     "completed": [],
-                    "failed": [SHORT_TASKS[0]],
+                    "failed": [tasks[0]],
                     "success": False,
                     "server_log": str(server_log.relative_to(root)),
                     "run_log": str(run_log.relative_to(root)),
@@ -229,7 +254,7 @@ def main() -> None:
                     "--reset-mode",
                     "soft",
                     "--tasks",
-                    *SHORT_TASKS,
+                    *tasks,
                 ]
                 if args.fallback_to_agent:
                     run_command.append("--fallback-to-agent")
@@ -249,24 +274,25 @@ def main() -> None:
 
             result = load_run_result(
                 done_file,
-                SHORT_TASKS,
+                tasks,
                 timed_out=timed_out,
                 return_code=return_code,
             )
             completed = result.get("completed", [])
             failed = result.get("failed", [])
-            success = len(completed) == len(SHORT_TASKS) and not failed and not timed_out and return_code in (0, None)
+            success = len(completed) == len(tasks) and not failed and not timed_out and return_code in (0, None)
 
             final_summary = {
                 "seed": args.seed,
                 "label": args.label,
+                "task_preset": args.task_preset,
                 "mode": args.mode,
                 "fallback_to_agent": args.fallback_to_agent,
                 "timed_out": timed_out,
                 "timeout_seconds": args.timeout_seconds,
                 "attempt": attempt,
                 "max_attempts": args.max_attempts,
-                "tasks": SHORT_TASKS,
+                "tasks": tasks,
                 "completed": completed,
                 "failed": failed,
                 "success": success,
@@ -277,7 +303,7 @@ def main() -> None:
             }
             if result.get("error"):
                 final_summary["error"] = result["error"]
-            if success or (failed and failed[0] != SHORT_TASKS[0]) or attempt == args.max_attempts:
+            if success or (failed and failed[0] != tasks[0]) or attempt == args.max_attempts:
                 break
         finally:
             interrupt_process(run_proc)
@@ -288,15 +314,16 @@ def main() -> None:
         final_summary = {
             "seed": args.seed,
             "label": args.label,
+            "task_preset": args.task_preset,
             "mode": args.mode,
             "fallback_to_agent": args.fallback_to_agent,
             "timed_out": False,
             "timeout_seconds": args.timeout_seconds,
             "attempt": args.max_attempts,
             "max_attempts": args.max_attempts,
-            "tasks": SHORT_TASKS,
+            "tasks": tasks,
             "completed": [],
-            "failed": [SHORT_TASKS[0]],
+            "failed": [tasks[0]],
             "success": False,
             "server_log": str(server_log.relative_to(root)),
             "run_log": str(run_log.relative_to(root)),

@@ -82,14 +82,31 @@ That path is intentionally shorter than the deterministic flat-world demo. It us
 
 The recommended mode for this short chain is now `direct --fallback-to-agent`. In practice that keeps recordings visually active by replaying learned skills immediately, while still allowing the action agent to retry a task when direct replay cannot finish it cleanly.
 
+There is also an exploratory longer preset:
+
+1. `Mine 1 wood log`
+2. `Craft 1 crafting_table`
+3. `Craft 4 sticks`
+
+Current example:
+
+```bash
+./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset long-random --mode direct --fallback-to-agent --seed 12346 --max-attempts 3 --output recordings/random-world-long-demo.mp4
+```
+
+`record_demo_pipeline.py` now supports `--max-attempts` so random-world recordings can retry with a fresh world when spawn screening or early run setup fails. This avoids keeping a misleading partial recording from a failed first attempt.
+
 To validate random-world capability without recording video:
 
 ```bash
 ./venv/bin/python validate_random_world.py --mode direct --fallback-to-agent --seed 12345
-./venv/bin/python benchmark_random_world.py --mode direct --fallback-to-agent --seeds 12345 12346 12347
+./venv/bin/python benchmark_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350
+./venv/bin/python benchmark_random_world.py --task-preset long-random --mode direct --fallback-to-agent --seeds 12345 12346 12347
 ```
 
-The current benchmark snapshot is written to `recordings/random-world-benchmark.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345`, `12346`, and `12347` after fixing the spawn-screening flow so random-world runs can relocate before failing the initial tree check.
+The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-6seeds.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12350` for the two-task baseline.
+
+The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark.json`. The latest rerun succeeded on `1/3` sampled seeds for the three-task `long-random` chain, so that path should still be treated as an exploratory baseline rather than a stable benchmark.
 
 ## Prismarine Viewer Headless MP4
 

@@ -1,11 +1,12 @@
 {
   "seed": "12347",
   "label": "random-world-12347",
+  "task_preset": "short-random",
   "mode": "direct",
   "fallback_to_agent": true,
   "timed_out": false,
   "timeout_seconds": 300,
-  "attempt": 1,
+  "attempt": 3,
   "max_attempts": 3,
   "tasks": [
     "Mine 1 wood log",
