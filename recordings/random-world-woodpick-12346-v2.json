@@ -5,9 +5,9 @@
   "mode": "direct",
   "fallback_to_agent": true,
   "timed_out": false,
-  "timeout_seconds": 900,
+  "timeout_seconds": 600,
   "attempt": 1,
-  "max_attempts": 3,
+  "max_attempts": 6,
   "tasks": [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
@@ -26,8 +26,11 @@
   ],
   "failed": [],
   "success": true,
-  "server_log": "recordings/random-world-woodpick-12346-v2-server.log",
-  "run_log": "recordings/random-world-woodpick-12346-v2-run.log",
+  "mc_port": 25567,
+  "bridge_port": 3002,
+  "artifacts_dir": "recordings/_runs/random-world-woodpick-12346-v2",
+  "server_log": "recordings/_runs/random-world-woodpick-12346-v2/random-world-woodpick-12346-v2-server.log",
+  "run_log": "recordings/_runs/random-world-woodpick-12346-v2/random-world-woodpick-12346-v2-run.log",
   "returncode": 0,
   "interrupted": false,
   "failed_task": null,
@@ -70,7 +73,7 @@
   "fallback_count": 0,
   "spawn_screening_required": true,
   "spawn_screening_success": true,
-  "spawn_screening_attempts": 1,
+  "spawn_screening_attempts": 3,
   "spawn_screening_nearby_tree_initial": false,
-  "duration_seconds": 64.53
+  "duration_seconds": 68.73
 }

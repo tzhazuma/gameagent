@@ -115,6 +115,17 @@ For isolated local smoke runs, you can also override the default ports explicitl
 ./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --mc-port 25573 --viewer-port 3008 --bridge-port 3003 --output recordings/random-world-demo-smoke.mp4
 ```
 
+The repo now also ships a `Makefile` wrapper for the common random-world flows. The benchmark refresh targets default to a six-attempt fresh-world retry budget per seed so occasional spawn-screening misses do not invalidate an otherwise healthy run:
+
+```bash
+make benchmark-random-short
+make benchmark-random-long
+make validate-random-woodpick
+make benchmark-random-world
+make verify-random-world
+make record-random-short-smoke
+```
+
 `capture_viewer.py` now also waits for non-black rendered frames on the Xvfb display before starting `ffmpeg`. That removes the old short-demo startup black screen that happened when the browser window existed but the prismarine viewer had not drawn yet.
 
 To validate random-world capability without recording video:
@@ -126,11 +137,11 @@ To validate random-world capability without recording video:
 ./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline. Exact fallback, attempt, and duration values live in the JSON artifact. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` files have been retired.
+The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline. Under the current `make benchmark-random-short` path, each seed gets up to 6 fresh-world attempts to smooth spawn-screening variance; the latest rerun landed at `average_attempt: 1.15` and `average_run_duration_seconds: 27.6285`. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` files have been retired.
 
-The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain. Exact fallback, attempt, and duration values live in the JSON artifact. The older `recordings/random-world-long-benchmark.json` file has been retired.
+The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain, with `average_attempt: 1.1` and `average_run_duration_seconds: 43.314`. The older `recordings/random-world-long-benchmark.json` file has been retired.
 
-The current wooden-pickaxe validation snapshot is `recordings/random-world-woodpick-12346-v2.json`. It records the current successful seed-`12346` verification run for the six-task `woodpick-random` chain. Exact fallback and duration values live in the JSON artifact.
+The current wooden-pickaxe validation snapshot is `recordings/random-world-woodpick-12346-v2.json`. It records the current successful seed-`12346` verification run for the six-task `woodpick-random` chain, with `duration_seconds: 68.73`. Exact fallback and observability values live in the JSON artifact.
 
 By default, `benchmark_random_world.py` now keeps its per-seed JSON/log outputs under `recordings/_runs/<label-prefix>/`, while the checked-in top-level `*-v2.json` files remain the canonical published benchmark snapshots.
 
@@ -141,6 +152,8 @@ To recheck the current checked-in random-world artifacts in one command:
 ```bash
 ./venv/bin/python verify_random_world_artifacts.py
 ```
+
+Docs hand-off note: use `make benchmark-random-world` followed by `make verify-random-world` as the canonical refresh sequence. Keep the published benchmark/validation snapshots in the top-level `recordings/*-v2.json` files, keep the checked-in demo videos as the canonical visual artifacts, and treat `recordings/_runs/` as transient per-seed run output that can be regenerated at any time.
 
 ## Prismarine Viewer Headless MP4
 

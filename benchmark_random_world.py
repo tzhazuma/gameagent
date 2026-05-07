@@ -163,6 +163,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Per-seed timeout passed to validate_random_world.py",
     )
     parser.add_argument(
+        "--max-attempts",
+        type=int,
+        default=3,
+        help="How many fresh validation attempts to allow per seed",
+    )
+    parser.add_argument(
         "--ckpt-dir",
         help="Optional isolated checkpoint dir shared by this benchmark run",
     )
@@ -222,6 +228,8 @@ def main() -> None:
             str(artifacts_root),
             "--timeout-seconds",
             str(args.timeout_seconds),
+            "--max-attempts",
+            str(args.max_attempts),
             "--mc-port",
             str(args.mc_port),
             "--bridge-port",
@@ -266,6 +274,7 @@ def main() -> None:
         {
             "label_prefix": label_prefix,
             "artifacts_dir": path_for_display(root, artifacts_root),
+            "max_attempts": args.max_attempts,
             "mc_port": args.mc_port,
             "bridge_port": args.bridge_port,
         }
