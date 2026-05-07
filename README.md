@@ -45,9 +45,9 @@ Examples:
 ./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark artifact is `recordings/random-world-benchmark-20seeds-v2.json`. On the latest rerun across seeds `12345` through `12364`, all 20 seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`, with `total_fallback_count: 0`, `average_attempt: 1.15`, and `average_run_duration_seconds: 35.657`.
+The current short-chain benchmark artifact is `recordings/random-world-benchmark-20seeds-v2.json`. On the latest rerun across seeds `12345` through `12364`, all 20 seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`, with `total_fallback_count: 0`, `average_attempt: 1.15`, and `average_run_duration_seconds: 35.657`. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` snapshots have been retired.
 
-The current longer-chain benchmark artifact is `recordings/random-world-long-benchmark-10seeds-v2.json`. For the four-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks`, the latest rerun succeeded on all sampled seeds `12345` through `12354`, with `total_fallback_count: 0`, `average_attempt: 1.1`, and `average_run_duration_seconds: 39.078`.
+The current longer-chain benchmark artifact is `recordings/random-world-long-benchmark-10seeds-v2.json`. For the four-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks`, the latest rerun succeeded on all sampled seeds `12345` through `12354`, with `total_fallback_count: 0`, `average_attempt: 1.1`, and `average_run_duration_seconds: 39.078`. The older `recordings/random-world-long-benchmark.json` snapshot has been retired.
 
 The dedicated wooden-pickaxe random-world validation artifact is `recordings/random-world-woodpick-12346-v2.json`. On the current seed-`12346` verification run, the six-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks -> Mine 1 wood log -> Craft 1 wooden_pickaxe` completed successfully with `fallback_count: 0` in `64.53s`.
 

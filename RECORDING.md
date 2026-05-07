@@ -117,9 +117,9 @@ To validate random-world capability without recording video:
 ./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline, with `total_fallback_count: 0` and `average_run_duration_seconds: 35.657`.
+The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline, with `total_fallback_count: 0` and `average_run_duration_seconds: 35.657`. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` files have been retired.
 
-The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain, with `total_fallback_count: 0` and `average_run_duration_seconds: 39.078`.
+The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain, with `total_fallback_count: 0` and `average_run_duration_seconds: 39.078`. The older `recordings/random-world-long-benchmark.json` file has been retired.
 
 The current wooden-pickaxe validation snapshot is `recordings/random-world-woodpick-12346-v2.json`. On the current seed-`12346` verification run, the six-task `woodpick-random` chain completed in `64.53s` with `fallback_count: 0`.
 
