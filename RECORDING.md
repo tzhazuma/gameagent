@@ -67,6 +67,8 @@ The default pipeline uses a longer task sequence than the earlier smoke test, ru
 
 If the task run exits before the cap, capture stops automatically. If the task run is still active when capture hits the cap, the pipeline prints a warning so you can rerun it with a larger `--duration`.
 
+`record_demo_pipeline.py` now also derives isolated default `--ckpt-dir` and `--server-root` paths from `--output`, so ad hoc smoke recordings do not trample each other's cached state unless you override those paths deliberately.
+
 `direct` mode replays learned skill functions from `ckpt_voyager/skill/skills.json` directly. This is useful for recording because it preserves the real learned behavior while avoiding long idle gaps between action-model generations.
 
 For random-seed worlds, switch the server to a natural overworld and disable the fixed arena:
@@ -106,6 +108,13 @@ Current example:
 
 `record_demo_pipeline.py` now supports `--max-attempts` so random-world recordings can retry with a fresh world when spawn screening or early run setup fails. This avoids keeping a misleading partial recording from a failed first attempt.
 
+For isolated local smoke runs, you can also override the default ports explicitly:
+
+```bash
+./venv/bin/python validate_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seed 12345 --mc-port 25571 --bridge-port 3001
+./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --mc-port 25573 --viewer-port 3008 --bridge-port 3003 --output recordings/random-world-demo-smoke.mp4
+```
+
 `capture_viewer.py` now also waits for non-black rendered frames on the Xvfb display before starting `ffmpeg`. That removes the old short-demo startup black screen that happened when the browser window existed but the prismarine viewer had not drawn yet.
 
 To validate random-world capability without recording video:
@@ -117,13 +126,21 @@ To validate random-world capability without recording video:
 ./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline, with `total_fallback_count: 0` and `average_run_duration_seconds: 35.657`. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` files have been retired.
+The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline. Exact fallback, attempt, and duration values live in the JSON artifact. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` files have been retired.
 
-The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain, with `total_fallback_count: 0` and `average_run_duration_seconds: 39.078`. The older `recordings/random-world-long-benchmark.json` file has been retired.
+The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain. Exact fallback, attempt, and duration values live in the JSON artifact. The older `recordings/random-world-long-benchmark.json` file has been retired.
 
-The current wooden-pickaxe validation snapshot is `recordings/random-world-woodpick-12346-v2.json`. On the current seed-`12346` verification run, the six-task `woodpick-random` chain completed in `64.53s` with `fallback_count: 0`.
+The current wooden-pickaxe validation snapshot is `recordings/random-world-woodpick-12346-v2.json`. It records the current successful seed-`12346` verification run for the six-task `woodpick-random` chain. Exact fallback and duration values live in the JSON artifact.
+
+By default, `benchmark_random_world.py` now keeps its per-seed JSON/log outputs under `recordings/_runs/<label-prefix>/`, while the checked-in top-level `*-v2.json` files remain the canonical published benchmark snapshots.
 
 The validation JSON written by `validate_random_world.py` now carries run-level observability fields including `failed_task`, `failure_reason`, `failure_phase`, `used_fallback_on_tasks`, `fallback_events`, `task_outcomes`, `fallback_count`, `spawn_screening_required`, `spawn_screening_success`, `spawn_screening_attempts`, `spawn_screening_nearby_tree_initial`, and `duration_seconds`.
+
+To recheck the current checked-in random-world artifacts in one command:
+
+```bash
+./venv/bin/python verify_random_world_artifacts.py
+```
 
 ## Prismarine Viewer Headless MP4
 

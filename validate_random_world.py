@@ -12,30 +12,14 @@ import sys
 import time
 from pathlib import Path
 
-
-SHORT_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-]
-LONG_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-    "Mine 1 wood log",
-    "Craft 4 sticks",
-]
-WOODPICK_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-    "Mine 1 wood log",
-    "Craft 4 sticks",
-    "Mine 1 wood log",
-    "Craft 1 wooden_pickaxe",
-]
-TASK_PRESETS = {
-    "short-random": SHORT_RANDOM_WORLD_TASKS,
-    "long-random": LONG_RANDOM_WORLD_TASKS,
-    "woodpick-random": WOODPICK_RANDOM_WORLD_TASKS,
-}
+from random_world_config import (
+    RANDOM_WORLD_TASK_PRESET_NAMES,
+    default_validation_ckpt_dir,
+    default_validation_server_root,
+    get_random_world_tasks,
+    path_for_display,
+    resolve_relative_path,
+)
 
 
 def classify_failure_phase(tasks: list[str], completed: list[str], failed: list[str], error: str | None) -> str:
@@ -175,6 +159,34 @@ def load_run_result(
     }
 
 
+def resolve_validation_layout(
+    root: Path,
+    *,
+    label: str,
+    artifacts_dir: str,
+    ckpt_dir: str | None,
+    server_root: str | None,
+) -> tuple[Path, Path, Path, Path, Path]:
+    artifacts_root = resolve_relative_path(root, artifacts_dir).resolve()
+    ckpt_path = (
+        resolve_relative_path(root, ckpt_dir).resolve()
+        if ckpt_dir
+        else (root / default_validation_ckpt_dir(label)).resolve()
+    )
+    resolved_server_root = (
+        resolve_relative_path(root, server_root).resolve()
+        if server_root
+        else (root / default_validation_server_root(label)).resolve()
+    )
+    return (
+        artifacts_root,
+        ckpt_path,
+        resolved_server_root,
+        artifacts_root / f"{label}.done",
+        resolved_server_root / "ready.json",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", help="Optional random-world seed")
@@ -184,7 +196,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--task-preset",
-        choices=tuple(TASK_PRESETS.keys()),
+        choices=RANDOM_WORLD_TASK_PRESET_NAMES,
         default="short-random",
         help="Built-in random-world task chain to validate",
     )
@@ -201,8 +213,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--ckpt-dir",
-        default="ckpt_random_world_validation",
-        help="Checkpoint directory for the validation run",
+        help="Optional checkpoint directory for the validation run; defaults to a label-derived path",
+    )
+    parser.add_argument(
+        "--artifacts-dir",
+        default="recordings",
+        help="Directory used for validation logs, done files, and optional JSON output",
     )
     parser.add_argument(
         "--output-json",
@@ -225,6 +241,18 @@ def build_parser() -> argparse.ArgumentParser:
         default=3,
         help="How many fresh world attempts to try before giving up on this seed",
     )
+    parser.add_argument(
+        "--mc-port",
+        type=int,
+        default=25565,
+        help="Minecraft server port used for start_demo_server.py and run_recorded_demo.py",
+    )
+    parser.add_argument(
+        "--bridge-port",
+        type=int,
+        default=3000,
+        help="Mineflayer bridge HTTP port passed through to run_recorded_demo.py",
+    )
     return parser
 
 
@@ -232,22 +260,21 @@ def main() -> None:
     args = build_parser().parse_args()
     root = Path(__file__).resolve().parent
     python_executable = resolve_python(root)
-    tasks = TASK_PRESETS[args.task_preset]
-    if args.server_root:
-        requested_server_root = Path(args.server_root)
-        server_root = requested_server_root if requested_server_root.is_absolute() else root / requested_server_root
-    else:
-        server_root = root / ".demo_server_random_validation"
-    ready_file = server_root / "ready.json"
-    recordings_root = root / "recordings"
-    done_file = recordings_root / f"{args.label}.done"
-    server_log = recordings_root / f"{args.label}-server.log"
-    run_log = recordings_root / f"{args.label}-run.log"
+    tasks = get_random_world_tasks(args.task_preset)
+    artifacts_root, ckpt_path, server_root, done_file, ready_file = resolve_validation_layout(
+        root,
+        label=args.label,
+        artifacts_dir=args.artifacts_dir,
+        ckpt_dir=args.ckpt_dir,
+        server_root=args.server_root,
+    )
+    artifacts_root.mkdir(parents=True, exist_ok=True)
+    server_log = artifacts_root / f"{args.label}-server.log"
+    run_log = artifacts_root / f"{args.label}-run.log"
 
     for path in (ready_file, done_file, server_log, run_log):
         if path.exists():
             path.unlink()
-    ckpt_path = root / args.ckpt_dir
     if ckpt_path.exists():
         shutil.rmtree(ckpt_path, ignore_errors=True)
 
@@ -269,6 +296,8 @@ def main() -> None:
                     str(server_root),
                     "--ready-file",
                     str(ready_file),
+                    "--port",
+                    str(args.mc_port),
                     "--world-type",
                     "minecraft:normal",
                     "--no-demo-arena",
@@ -299,8 +328,11 @@ def main() -> None:
                     "completed": [],
                     "failed": [tasks[0]],
                     "success": False,
-                    "server_log": str(server_log.relative_to(root)),
-                    "run_log": str(run_log.relative_to(root)),
+                    "mc_port": args.mc_port,
+                    "bridge_port": args.bridge_port,
+                    "artifacts_dir": path_for_display(root, artifacts_root),
+                    "server_log": path_for_display(root, server_log),
+                    "run_log": path_for_display(root, run_log),
                     "error": "server_ready_timeout",
                 }
                 final_summary.update(
@@ -327,11 +359,13 @@ def main() -> None:
                 run_command = [
                     python_executable,
                     "run_recorded_demo.py",
-                    "25565",
+                    str(args.mc_port),
                     "--mode",
                     args.mode,
                     "--ckpt-dir",
-                    args.ckpt_dir,
+                    str(ckpt_path),
+                    "--server-port",
+                    str(args.bridge_port),
                     "--start-from-ready-file",
                     str(ready_file),
                     "--spawn-from-world",
@@ -382,8 +416,11 @@ def main() -> None:
                 "completed": completed,
                 "failed": failed,
                 "success": success,
-                "server_log": str(server_log.relative_to(root)),
-                "run_log": str(run_log.relative_to(root)),
+                "mc_port": args.mc_port,
+                "bridge_port": args.bridge_port,
+                "artifacts_dir": path_for_display(root, artifacts_root),
+                "server_log": path_for_display(root, server_log),
+                "run_log": path_for_display(root, run_log),
                 "returncode": return_code,
                 "interrupted": result.get("interrupted", False),
             }
@@ -412,8 +449,11 @@ def main() -> None:
             "completed": [],
             "failed": [tasks[0]],
             "success": False,
-            "server_log": str(server_log.relative_to(root)),
-            "run_log": str(run_log.relative_to(root)),
+            "mc_port": args.mc_port,
+            "bridge_port": args.bridge_port,
+            "artifacts_dir": path_for_display(root, artifacts_root),
+            "server_log": path_for_display(root, server_log),
+            "run_log": path_for_display(root, run_log),
         }
         final_summary.update(
             {
@@ -432,7 +472,7 @@ def main() -> None:
             }
         )
     if args.output_json:
-        output_path = (root / args.output_json).resolve()
+        output_path = resolve_relative_path(root, args.output_json).resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(json.dumps(final_summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(final_summary, indent=2))

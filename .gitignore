@@ -137,9 +137,9 @@ plot_iter.py
 launch_mc.out
 voyager/env/mineflayer/test_spawn.js
 .demo_server/
-.demo_server_random_recording/
-.demo_server_random_validation/
+.demo_server*/
 recordings/frames/
+recordings/_runs/
 recordings/*.log
 recordings/*-frame.png
 recordings/*-smoke.mp4

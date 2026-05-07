@@ -23,6 +23,7 @@ Inspection showed that this repo and the local `~/.minecraft/mods` setup did not
 - one-command pipeline: `record_demo_pipeline.py`
 - random-world validation: `validate_random_world.py`
 - multi-seed benchmark: `benchmark_random_world.py`
+- artifact verifier: `verify_random_world_artifacts.py`
 - recorded sample artifact: `recordings/voyager-demo.mp4`
 
 The generated site now includes an interactive explorer with filtering, route visualization, and per-task snapshot details from the real `ckpt_voyager` data.
@@ -35,6 +36,8 @@ The recommended recording path is now `record_demo_pipeline.py` in `direct` mode
 
 The repo now also supports random-seed survival validation without the fixed arena. For random worlds, the best-performing baseline in this branch is a short `direct` replay chain with `--fallback-to-agent`, so the learned `mineWoodLog` and `craftCraftingTable` skills run immediately while still allowing an agent retry path when direct replay is not enough.
 
+`validate_random_world.py`, `benchmark_random_world.py`, and `record_demo_pipeline.py` now all accept explicit `--mc-port` and/or `--bridge-port` overrides, so random-world checks can run without colliding on the default `25565`/`3000` pair. The benchmark path also writes its per-seed JSON/log artifacts under `recordings/_runs/<label-prefix>/` by default, while the top-level checked-in `*-v2.json` files remain the canonical published snapshots.
+
 Examples:
 
 ```bash
@@ -45,13 +48,13 @@ Examples:
 ./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark artifact is `recordings/random-world-benchmark-20seeds-v2.json`. On the latest rerun across seeds `12345` through `12364`, all 20 seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`, with `total_fallback_count: 0`, `average_attempt: 1.15`, and `average_run_duration_seconds: 35.657`. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` snapshots have been retired.
+The current short-chain benchmark artifact is `recordings/random-world-benchmark-20seeds-v2.json`. It captures the latest rerun across seeds `12345` through `12364`, where all 20 seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`. Exact fallback, attempt, and duration values live in the JSON artifact. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` snapshots have been retired.
 
-The current longer-chain benchmark artifact is `recordings/random-world-long-benchmark-10seeds-v2.json`. For the four-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks`, the latest rerun succeeded on all sampled seeds `12345` through `12354`, with `total_fallback_count: 0`, `average_attempt: 1.1`, and `average_run_duration_seconds: 39.078`. The older `recordings/random-world-long-benchmark.json` snapshot has been retired.
+The current longer-chain benchmark artifact is `recordings/random-world-long-benchmark-10seeds-v2.json`. For the four-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks`, the latest rerun succeeded on all sampled seeds `12345` through `12354`. Exact fallback, attempt, and duration values live in the JSON artifact. The older `recordings/random-world-long-benchmark.json` snapshot has been retired.
 
-The dedicated wooden-pickaxe random-world validation artifact is `recordings/random-world-woodpick-12346-v2.json`. On the current seed-`12346` verification run, the six-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks -> Mine 1 wood log -> Craft 1 wooden_pickaxe` completed successfully with `fallback_count: 0` in `64.53s`.
+The dedicated wooden-pickaxe random-world validation artifact is `recordings/random-world-woodpick-12346-v2.json`. It records the current successful seed-`12346` verification run for the six-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks -> Mine 1 wood log -> Craft 1 wooden_pickaxe`. Exact fallback and duration values live in the JSON artifact.
 
-For random-world recording, the pipeline supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact. The current `recordings/random-world-demo.mp4` and `recordings/random-world-long-demo.mp4` were both regenerated with the render-readiness gate and passed `ffmpeg -vf blackdetect` without reporting black segments.
+For random-world recording, the pipeline supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact. `record_demo_pipeline.py` also derives isolated default `--ckpt-dir` and `--server-root` paths from `--output`, so smoke recordings do not reuse shared state unless you opt into that explicitly. The current `recordings/random-world-demo.mp4` and `recordings/random-world-long-demo.mp4` were both regenerated with the render-readiness gate and can be rechecked with `./venv/bin/python verify_random_world_artifacts.py`.
 
 The validation JSONs now include run-level observability fields such as `failed_task`, `failure_reason`, `failure_phase`, `used_fallback_on_tasks`, `fallback_events`, `task_outcomes`, `fallback_count`, `spawn_screening_required`, `spawn_screening_success`, `spawn_screening_attempts`, `spawn_screening_nearby_tree_initial`, and `duration_seconds`.
 

@@ -25,24 +25,6 @@ DEFAULT_TASKS = [
     "Mine 8 cobblestone",
     "Craft 1 furnace",
 ]
-SHORT_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-]
-LONG_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-    "Mine 1 wood log",
-    "Craft 4 sticks",
-]
-WOODPICK_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-    "Mine 1 wood log",
-    "Craft 4 sticks",
-    "Mine 1 wood log",
-    "Craft 1 wooden_pickaxe",
-]
 DEFAULT_POSITION = {"x": 0.5, "y": 81.0, "z": 0.5}
 TASK_TO_SKILL = {
     "Mine 1 wood log": "mineWoodLog",

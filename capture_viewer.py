@@ -210,6 +210,18 @@ def sampled_render_metrics(
     return black_percent, max_stddev
 
 
+def is_rendered_viewer_ready(
+    metrics: tuple[float, float] | None,
+    *,
+    black_threshold: float,
+    min_stddev: float,
+) -> bool:
+    if metrics is None:
+        return False
+    black_percent, stddev = metrics
+    return black_percent < black_threshold and stddev >= min_stddev
+
+
 def wait_for_rendered_viewer(
     display: str,
     size: str,
@@ -221,10 +233,8 @@ def wait_for_rendered_viewer(
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         metrics = sampled_render_metrics(display, size, crop_top=crop_top)
-        if metrics is not None:
-            black_percent, stddev = metrics
-            if black_percent < black_threshold and stddev >= min_stddev:
-                return
+        if is_rendered_viewer_ready(metrics, black_threshold=black_threshold, min_stddev=min_stddev):
+            return
         time.sleep(1)
     raise RuntimeError(
         f"Timed out waiting for viewer to render non-black frames on display {display}"

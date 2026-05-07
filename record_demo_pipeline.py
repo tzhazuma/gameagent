@@ -13,6 +13,14 @@ import sys
 import time
 from pathlib import Path
 
+from random_world_config import (
+    RANDOM_WORLD_TASK_PRESET_NAMES,
+    get_random_world_tasks,
+    is_random_world_task_preset,
+    resolve_relative_path,
+    slugify_name,
+)
+
 
 DEFAULT_TASKS = [
     "Mine 3 spruce_log",
@@ -25,24 +33,6 @@ DEFAULT_TASKS = [
     "Craft 1 stone_pickaxe",
     "Mine 8 cobblestone",
     "Craft 1 furnace",
-]
-SHORT_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-]
-LONG_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-    "Mine 1 wood log",
-    "Craft 4 sticks",
-]
-WOODPICK_RANDOM_WORLD_TASKS = [
-    "Mine 1 wood log",
-    "Craft 1 crafting_table",
-    "Mine 1 wood log",
-    "Craft 4 sticks",
-    "Mine 1 wood log",
-    "Craft 1 wooden_pickaxe",
 ]
 
 
@@ -76,6 +66,52 @@ def parse_size(value: str) -> tuple[int, int]:
     return width, height
 
 
+def resolve_requested_tasks(tasks: list[str], task_preset: str | None) -> list[str]:
+    if task_preset and task_preset != "default":
+        return get_random_world_tasks(task_preset)
+    return list(tasks)
+
+
+def uses_random_world_server(world_type: str, demo_arena: bool, task_preset: str | None) -> bool:
+    return world_type == "minecraft:normal" and (
+        not demo_arena or is_random_world_task_preset(task_preset)
+    )
+
+
+def output_slug(root: Path, output_path: Path) -> str:
+    slug_source = output_path.with_suffix("")
+    try:
+        relative_output = slug_source.relative_to(root)
+    except ValueError:
+        relative_output = Path(slug_source.name)
+    return slugify_name(relative_output.as_posix())
+
+
+def resolve_recording_layout(
+    root: Path,
+    *,
+    output: str,
+    ckpt_dir: str | None,
+    server_root: str | None,
+    world_type: str,
+    demo_arena: bool,
+    task_preset: str | None,
+) -> tuple[Path, Path, Path, Path]:
+    output_path = resolve_relative_path(root, output).resolve()
+    run_slug = output_slug(root, output_path)
+    ckpt_path = (
+        resolve_relative_path(root, ckpt_dir).resolve()
+        if ckpt_dir
+        else (root / f"ckpt_{run_slug}").resolve()
+    )
+    if server_root:
+        resolved_server_root = resolve_relative_path(root, server_root).resolve()
+    else:
+        server_prefix = ".demo_server_random" if uses_random_world_server(world_type, demo_arena, task_preset) else ".demo_server"
+        resolved_server_root = (root / f"{server_prefix}_{run_slug}").resolve()
+    return output_path, ckpt_path, resolved_server_root, resolved_server_root / "ready.json"
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -100,6 +136,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=25565,
         help="Local Minecraft demo server port",
+    )
+    parser.add_argument(
+        "--bridge-port",
+        type=int,
+        default=3000,
+        help="Mineflayer bridge HTTP port",
     )
     parser.add_argument(
         "--display",
@@ -132,8 +174,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--ckpt-dir",
-        default="ckpt_recorded_demo_long",
-        help="Checkpoint directory used for the recorded run",
+        help="Optional checkpoint directory used for the recorded run; defaults to a path derived from --output",
+    )
+    parser.add_argument(
+        "--server-root",
+        help="Optional isolated server root; defaults to a path derived from --output",
     )
     parser.add_argument(
         "--tasks",
@@ -177,7 +222,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--task-preset",
-        choices=("default", "short-random", "long-random", "woodpick-random"),
+        choices=("default", *RANDOM_WORLD_TASK_PRESET_NAMES),
         help="Optional built-in task preset",
     )
     parser.add_argument(
@@ -185,6 +230,24 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=1,
         help="How many fresh recording attempts to try before giving up",
+    )
+    parser.add_argument(
+        "--render-timeout",
+        type=float,
+        default=30,
+        help="How long capture_viewer.py waits for rendered frames before recording",
+    )
+    parser.add_argument(
+        "--render-black-threshold",
+        type=float,
+        default=98,
+        help="Treat the viewer as ready once sampled frames are below this black percentage",
+    )
+    parser.add_argument(
+        "--render-min-stddev",
+        type=float,
+        default=8,
+        help="Require at least this much frame variance before recording starts",
     )
     return parser
 
@@ -247,27 +310,22 @@ def run_ffmpeg_crop(source: Path, target: Path, width: int, height: int, crop_to
 def main() -> None:
     args = build_parser().parse_args()
     clear_proxy_env()
-    if args.task_preset == "short-random":
-        args.tasks = SHORT_RANDOM_WORLD_TASKS.copy()
-    elif args.task_preset == "long-random":
-        args.tasks = LONG_RANDOM_WORLD_TASKS.copy()
-    elif args.task_preset == "woodpick-random":
-        args.tasks = WOODPICK_RANDOM_WORLD_TASKS.copy()
+    args.tasks = resolve_requested_tasks(args.tasks, args.task_preset)
     demo_arena = args.demo_arena
     if demo_arena is None:
         demo_arena = args.world_type == "minecraft:flat"
 
     root = Path(__file__).resolve().parent
     python_executable = resolve_python(root)
-    ready_file = root / ".demo_server" / "ready.json"
-    server_root = root / ".demo_server"
-    if args.world_type == "minecraft:normal" and (
-        not demo_arena or args.task_preset in {"short-random", "long-random", "woodpick-random"}
-    ):
-        server_root = root / ".demo_server_random_recording"
-        ready_file = server_root / "ready.json"
-    output_path = (root / args.output).resolve()
-    ckpt_path = (root / args.ckpt_dir).resolve()
+    output_path, ckpt_path, server_root, ready_file = resolve_recording_layout(
+        root,
+        output=args.output,
+        ckpt_dir=args.ckpt_dir,
+        server_root=args.server_root,
+        world_type=args.world_type,
+        demo_arena=demo_arena,
+        task_preset=args.task_preset,
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     raw_output = output_path.with_name(output_path.stem + ".raw" + output_path.suffix)
     server_log = output_path.with_name(output_path.stem + "-server.log")
@@ -331,9 +389,11 @@ def main() -> None:
                         "run_recorded_demo.py",
                         str(args.mc_port),
                         "--ckpt-dir",
-                        args.ckpt_dir,
+                        str(ckpt_path),
                         "--mode",
                         args.mode,
+                        "--server-port",
+                        str(args.bridge_port),
                         "--done-file",
                         str(done_file),
                         "--start-from-ready-file",
@@ -364,6 +424,12 @@ def main() -> None:
                     str(args.wait_timeout),
                     "--page-settle-seconds",
                     str(args.page_settle_seconds),
+                    "--render-timeout",
+                    str(args.render_timeout),
+                    "--render-black-threshold",
+                    str(args.render_black_threshold),
+                    "--render-min-stddev",
+                    str(args.render_min_stddev),
                     "--sample-crop-top",
                     str(args.crop_top),
                     "--stop-when-file-exists",
