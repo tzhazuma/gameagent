@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
 from typing import Callable
 
@@ -31,7 +32,16 @@ SHORT_RANDOM_WORLD_TASKS = [
 LONG_RANDOM_WORLD_TASKS = [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
+    "Mine 1 wood log",
     "Craft 4 sticks",
+]
+WOODPICK_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Mine 1 wood log",
+    "Craft 4 sticks",
+    "Mine 1 wood log",
+    "Craft 1 wooden_pickaxe",
 ]
 DEFAULT_POSITION = {"x": 0.5, "y": 81.0, "z": 0.5}
 TASK_TO_SKILL = {
@@ -69,6 +79,54 @@ TASK_ITEM_ALIASES = {
     "sticks": "stick",
 }
 DIRECT_SKILL_OVERRIDES = {
+    "mineWoodLog": """
+async function mineWoodLog(bot) {
+  const logNames = ["oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log"];
+  const initialLogCount = logNames.reduce((total, name) => {
+    const item = mcData.itemsByName[name];
+    if (!item) return total;
+    const invItem = bot.inventory.findInventoryItem(item.id);
+    return total + (invItem ? invItem.count : 0);
+  }, 0);
+
+  function findNearbyLogBlock() {
+    for (const name of logNames) {
+      const blockId = mcData.blocksByName[name]?.id;
+      if (!blockId) continue;
+      const block = bot.findBlock({
+        matching: blockId,
+        maxDistance: 32,
+      });
+      if (block) {
+        return block;
+      }
+    }
+    return null;
+  }
+
+  let targetBlock = findNearbyLogBlock();
+  if (!targetBlock) {
+    bot.chat("No wood log nearby, exploring...");
+    const directions = [new Vec3(1, 0, 1), new Vec3(1, 0, -1), new Vec3(-1, 0, 1), new Vec3(-1, 0, -1), new Vec3(1, 0, 0), new Vec3(-1, 0, 0), new Vec3(0, 0, 1), new Vec3(0, 0, -1)];
+    targetBlock = await exploreUntil(bot, directions[Math.floor(Math.random() * directions.length)], 60, () => findNearbyLogBlock());
+  }
+
+  if (!targetBlock) {
+    bot.chat("Could not find any wood log.");
+    return;
+  }
+
+  bot.chat(`Mining 1 ${targetBlock.name}...`);
+  await mineBlock(bot, targetBlock.name, 1);
+  const finalLogCount = logNames.reduce((total, name) => {
+    const item = mcData.itemsByName[name];
+    if (!item) return total;
+    const invItem = bot.inventory.findInventoryItem(item.id);
+    return total + (invItem ? invItem.count : 0);
+  }, 0);
+  bot.chat(`Finished mining 1 wood log. Inventory logs: ${initialLogCount} -> ${finalLogCount}.`);
+}
+""",
     "craftFourSticks": """
 async function craftFourSticks(bot) {
   async function craftInventoryItem(bot, name, count = 1) {
@@ -318,12 +376,34 @@ def has_nearby_tree(snapshot: dict) -> bool:
 
 
 def screen_spawn_for_tree(voyager: Voyager, tasks: list[str], attempts: int = 6) -> tuple[bool, str]:
+    return screen_spawn_for_tree_with_metrics(voyager, tasks, attempts=attempts)
+
+
+def screen_spawn_for_tree_with_metrics(
+    voyager: Voyager,
+    tasks: list[str],
+    attempts: int = 6,
+    metrics: dict | None = None,
+) -> tuple[bool, str]:
     if not tasks or tasks[0] != "Mine 1 wood log":
+        if metrics is not None:
+            metrics["spawn_screening_required"] = False
+            metrics["spawn_screening_attempts"] = 0
+            metrics["spawn_screening_success"] = True
         return True, ""
-    if has_nearby_tree(final_snapshot(voyager.last_events)):
+    initial_has_tree = has_nearby_tree(final_snapshot(voyager.last_events))
+    if metrics is not None:
+        metrics["spawn_screening_required"] = True
+        metrics["spawn_screening_attempts"] = 0
+        metrics["spawn_screening_nearby_tree_initial"] = initial_has_tree
+    if initial_has_tree:
+        if metrics is not None:
+            metrics["spawn_screening_success"] = True
         return True, ""
     for attempt in range(1, attempts + 1):
         print(f"Spawn screening attempt {attempt}/{attempts}: spreading to look for nearby trees")
+        if metrics is not None:
+            metrics["spawn_screening_attempts"] = attempt
         events = voyager.env.step(
             """
 bot.chat('/spreadplayers ~ ~ 0 500 under 100 false @s');
@@ -333,7 +413,11 @@ await bot.waitForTicks(bot.waitTicks * 6);
         )
         voyager.last_events = events
         if has_nearby_tree(final_snapshot(events)):
+            if metrics is not None:
+                metrics["spawn_screening_success"] = True
             return True, ""
+    if metrics is not None:
+        metrics["spawn_screening_success"] = False
     return False, "spawn screening could not place the bot near a visible tree/log block"
 
 
@@ -362,6 +446,7 @@ def write_done_state(
     *,
     interrupted: bool = False,
     error: str | None = None,
+    metrics: dict | None = None,
 ) -> None:
     if not done_file:
         return
@@ -371,11 +456,40 @@ def write_done_state(
         "completed": list(completed),
         "failed": list(failed),
     }
+    if failed:
+        payload["failed_task"] = failed[0]
+    failure_reason = error
+    if failure_reason is None and metrics:
+        for outcome in reversed(metrics.get("task_outcomes", [])):
+            if outcome.get("success"):
+                continue
+            if not failed or outcome.get("task") == failed[0]:
+                failure_reason = outcome.get("error")
+                break
     if interrupted:
         payload["interrupted"] = True
     if error:
         payload["error"] = error
+    if failure_reason:
+        payload["failure_reason"] = failure_reason
+    if metrics:
+        payload.update(metrics)
     done_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def note_fallback(metrics: dict | None, task: str, *, stage: str, reason: str) -> None:
+    if metrics is None:
+        return
+    used_fallback_on_tasks = metrics.setdefault("used_fallback_on_tasks", [])
+    if task not in used_fallback_on_tasks:
+        used_fallback_on_tasks.append(task)
+    metrics.setdefault("fallback_events", []).append(
+        {
+            "task": task,
+            "stage": stage,
+            "reason": reason,
+        }
+    )
 
 
 def direct_precheck_failure(task: str, snapshot: dict) -> str | None:
@@ -459,12 +573,21 @@ def record_task_outcome(
     completed: list[str],
     failed: list[str],
     progress_callback: Callable[[], None] | None = None,
+    metrics: dict | None = None,
 ) -> None:
     voyager.curriculum_agent.update_exploration_progress(info)
     if info["success"]:
         completed.append(info["task"])
     else:
         failed.append(info["task"])
+    if metrics is not None:
+        metrics.setdefault("task_outcomes", []).append(
+            {
+                "task": info.get("task"),
+                "success": bool(info.get("success")),
+                "error": str(info.get("error")) if info.get("error") is not None else None,
+            }
+        )
     if progress_callback is not None:
         progress_callback()
 
@@ -512,6 +635,7 @@ def run_direct_sequence(
     failed: list[str],
     fallback_to_agent: bool = False,
     progress_callback: Callable[[], None] | None = None,
+    metrics: dict | None = None,
 ) -> None:
     for task in tasks:
         before_snapshot = final_snapshot(voyager.last_events)
@@ -519,8 +643,9 @@ def run_direct_sequence(
         if precheck_failure:
             if fallback_to_agent:
                 print(f"Direct precheck failed, retrying with agent: {task}: {precheck_failure}")
+                note_fallback(metrics, task, stage="precheck", reason=precheck_failure)
                 info = run_agent_task(voyager, task)
-                record_task_outcome(voyager, info, completed, failed, progress_callback)
+                record_task_outcome(voyager, info, completed, failed, progress_callback, metrics)
                 if info["success"]:
                     continue
                 print(f"Agent fallback failed for {task}: {info.get('error')}")
@@ -531,6 +656,7 @@ def run_direct_sequence(
                 completed,
                 failed,
                 progress_callback,
+                metrics,
             )
             print(f"Direct precheck failed for {task}: {precheck_failure}")
             break
@@ -538,8 +664,9 @@ def run_direct_sequence(
         if not skill_name:
             if fallback_to_agent:
                 print(f"No direct skill mapping for task, retrying with agent: {task}")
+                note_fallback(metrics, task, stage="mapping", reason="no direct skill mapping")
                 info = run_agent_task(voyager, task)
-                record_task_outcome(voyager, info, completed, failed, progress_callback)
+                record_task_outcome(voyager, info, completed, failed, progress_callback, metrics)
                 if info["success"]:
                     continue
                 print(f"Agent fallback failed for {task}: {info.get('error')}")
@@ -550,6 +677,7 @@ def run_direct_sequence(
                 completed,
                 failed,
                 progress_callback,
+                metrics,
             )
             print(f"No direct skill mapping for task: {task}")
             break
@@ -565,8 +693,9 @@ def run_direct_sequence(
         except Exception as exc:
             if fallback_to_agent:
                 print(f"Direct skill run failed, retrying with agent: {task}: {exc}")
+                note_fallback(metrics, task, stage="direct_exception", reason=str(exc))
                 info = run_agent_task(voyager, task)
-                record_task_outcome(voyager, info, completed, failed, progress_callback)
+                record_task_outcome(voyager, info, completed, failed, progress_callback, metrics)
                 if info["success"]:
                     continue
                 print(f"Agent fallback failed for {task}: {info.get('error')}")
@@ -578,6 +707,7 @@ def run_direct_sequence(
                 completed,
                 failed,
                 progress_callback,
+                metrics,
             )
             break
         voyager.recorder.record(events, task)
@@ -585,8 +715,9 @@ def run_direct_sequence(
         if has_error_event(events):
             if fallback_to_agent:
                 print(f"Task produced onError events in direct mode, retrying with agent: {task}")
+                note_fallback(metrics, task, stage="onError", reason="onError event")
                 info = run_agent_task(voyager, task)
-                record_task_outcome(voyager, info, completed, failed, progress_callback)
+                record_task_outcome(voyager, info, completed, failed, progress_callback, metrics)
                 if info["success"]:
                     continue
                 print(f"Agent fallback failed for {task}: {info.get('error')}")
@@ -597,6 +728,7 @@ def run_direct_sequence(
                 completed,
                 failed,
                 progress_callback,
+                metrics,
             )
             print(f"Task produced onError events: {task}")
             break
@@ -604,8 +736,9 @@ def run_direct_sequence(
         if not valid:
             if fallback_to_agent:
                 print(f"Task validation failed in direct mode, retrying with agent: {task}: {reason}")
+                note_fallback(metrics, task, stage="validation", reason=reason)
                 info = run_agent_task(voyager, task)
-                record_task_outcome(voyager, info, completed, failed, progress_callback)
+                record_task_outcome(voyager, info, completed, failed, progress_callback, metrics)
                 if info["success"]:
                     continue
                 print(f"Agent fallback failed for {task}: {info.get('error')}")
@@ -616,6 +749,7 @@ def run_direct_sequence(
                 completed,
                 failed,
                 progress_callback,
+                metrics,
             )
             print(f"Task validation failed for {task}: {reason}")
             break
@@ -625,16 +759,24 @@ def run_direct_sequence(
             completed,
             failed,
             progress_callback,
+            metrics,
         )
 
 
 def main() -> None:
     args = build_parser().parse_args()
     model_name = os.environ.get("VOYAGER_MODEL_NAME", "kimi-k2.6")
+    started_at = time.monotonic()
     completed: list[str] = []
     failed: list[str] = []
     interrupted = False
     terminal_error: str | None = None
+    run_metrics: dict = {
+        "mode": args.mode,
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [],
+    }
     ready_position = load_position_from_ready_file(args.start_from_ready_file)
     if args.start_from_ready_file and ready_position is None:
         args.spawn_from_world = True
@@ -642,12 +784,15 @@ def main() -> None:
         args.position = ready_position
 
     def persist_done_state() -> None:
+        run_metrics["duration_seconds"] = round(time.monotonic() - started_at, 2)
+        run_metrics["fallback_count"] = len(run_metrics.get("fallback_events", []))
         write_done_state(
             args.done_file,
             completed,
             failed,
             interrupted=interrupted,
             error=terminal_error,
+            metrics=run_metrics,
         )
 
     print("=" * 60)
@@ -702,9 +847,14 @@ def main() -> None:
             options=reset_options
         )
         if args.spawn_from_world:
-            spawn_ok, spawn_reason = screen_spawn_for_tree(voyager, args.tasks)
+            spawn_ok, spawn_reason = screen_spawn_for_tree_with_metrics(voyager, args.tasks, metrics=run_metrics)
         else:
             spawn_ok, spawn_reason = validate_random_world_spawn(voyager.last_events, args.tasks)
+            run_metrics["spawn_screening_required"] = False
+            run_metrics["spawn_screening_attempts"] = 0
+            run_metrics["spawn_screening_success"] = bool(spawn_ok)
+            if args.tasks and args.tasks[0] == "Mine 1 wood log":
+                run_metrics["spawn_screening_nearby_tree_initial"] = has_nearby_tree(final_snapshot(voyager.last_events))
         if not spawn_ok:
             failed = [args.tasks[0]] if args.tasks else []
             terminal_error = spawn_reason
@@ -724,11 +874,12 @@ def main() -> None:
                 completed,
                 failed,
                 fallback_to_agent=args.fallback_to_agent,
+                metrics=run_metrics,
             )
         else:
             for task in args.tasks:
                 info = run_agent_task(voyager, task)
-                record_task_outcome(voyager, info, completed, failed)
+                record_task_outcome(voyager, info, completed, failed, metrics=run_metrics)
                 if not info["success"]:
                     break
 

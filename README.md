@@ -31,22 +31,29 @@ This repo now also contains real recorded gameplay artifacts generated locally f
 
 The recommended recording path is now `record_demo_pipeline.py` in `direct` mode, which replays the learned `ckpt_voyager` skill functions directly so the video stays visually active instead of spending most of its time waiting for a fresh action-model turn. The pipeline records up to its configured duration and stops early when the scripted run exits.
 
+`capture_viewer.py` now waits for the viewer to render non-black frames on the virtual display before starting `ffmpeg`, instead of only waiting for the viewer URL to respond. This removed the previous black opening on the short random-world video.
+
 The repo now also supports random-seed survival validation without the fixed arena. For random worlds, the best-performing baseline in this branch is a short `direct` replay chain with `--fallback-to-agent`, so the learned `mineWoodLog` and `craftCraftingTable` skills run immediately while still allowing an agent retry path when direct replay is not enough.
 
 Examples:
 
 ```bash
-./venv/bin/python validate_random_world.py --mode direct --fallback-to-agent --seed 12345
-./venv/bin/python benchmark_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350
+./venv/bin/python validate_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seed 12345
+./venv/bin/python benchmark_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350 12351 12352 12353 12354 12355 12356 12357 12358 12359 12360 12361 12362 12363 12364
 ./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset short-random --mode direct --fallback-to-agent --output recordings/random-world-demo.mp4
 ./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset long-random --mode direct --fallback-to-agent --seed 12346 --max-attempts 3 --output recordings/random-world-long-demo.mp4
+./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark artifact is `recordings/random-world-benchmark-6seeds.json`. On the latest rerun across seeds `12345` through `12350`, all six seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`.
+The current short-chain benchmark artifact is `recordings/random-world-benchmark-20seeds-v2.json`. On the latest rerun across seeds `12345` through `12364`, all 20 seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`, with `total_fallback_count: 0`, `average_attempt: 1.15`, and `average_run_duration_seconds: 35.657`.
 
-The current exploratory long-chain benchmark artifact is `recordings/random-world-long-benchmark.json`. For the three-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Craft 4 sticks`, the latest rerun succeeded on `1/3` sampled seeds, with seed `12346` serving as the current reproducible recording seed.
+The current longer-chain benchmark artifact is `recordings/random-world-long-benchmark-10seeds-v2.json`. For the four-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks`, the latest rerun succeeded on all sampled seeds `12345` through `12354`, with `total_fallback_count: 0`, `average_attempt: 1.1`, and `average_run_duration_seconds: 39.078`.
 
-For random-world recording, the pipeline now supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact.
+The dedicated wooden-pickaxe random-world validation artifact is `recordings/random-world-woodpick-12346-v2.json`. On the current seed-`12346` verification run, the six-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks -> Mine 1 wood log -> Craft 1 wooden_pickaxe` completed successfully with `fallback_count: 0` in `64.53s`.
+
+For random-world recording, the pipeline supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact. The current `recordings/random-world-demo.mp4` and `recordings/random-world-long-demo.mp4` were both regenerated with the render-readiness gate and passed `ffmpeg -vf blackdetect` without reporting black segments.
+
+The validation JSONs now include run-level observability fields such as `failed_task`, `failure_reason`, `failure_phase`, `used_fallback_on_tasks`, `fallback_events`, `task_outcomes`, `fallback_count`, `spawn_screening_required`, `spawn_screening_success`, `spawn_screening_attempts`, `spawn_screening_nearby_tree_initial`, and `duration_seconds`.
 
 These two charts are generated from the current real checkpoint:
 

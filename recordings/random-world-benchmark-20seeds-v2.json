@@ -1,0 +1,1099 @@
+{
+  "task_preset": "short-random",
+  "mode": "direct",
+  "fallback_to_agent": true,
+  "seed_count": 20,
+  "success_count": 20,
+  "success_rate": 1.0,
+  "duration_seconds": 1919.52,
+  "total_fallback_count": 0,
+  "average_fallback_count": 0.0,
+  "average_attempt": 1.15,
+  "average_run_duration_seconds": 35.657,
+  "failure_phase_counts": {
+    "completed": 20
+  },
+  "failed_task_counts": {},
+  "results": [
+    {
+      "seed": "12345",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12345\",\n  \"label\": \"random-world-v2-12345\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12345-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12345-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 18.51\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12345",
+        "label": "random-world-v2-12345",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12345-server.log",
+        "run_log": "recordings/random-world-v2-12345-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 18.51
+      }
+    },
+    {
+      "seed": "12346",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12346\",\n  \"label\": \"random-world-v2-12346\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12346-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12346-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 5,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 59.51\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12346",
+        "label": "random-world-v2-12346",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12346-server.log",
+        "run_log": "recordings/random-world-v2-12346-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 5,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 59.51
+      }
+    },
+    {
+      "seed": "12347",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12347\",\n  \"label\": \"random-world-v2-12347\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 2,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12347-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12347-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 2,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 37.51\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12347",
+        "label": "random-world-v2-12347",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 2,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12347-server.log",
+        "run_log": "recordings/random-world-v2-12347-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 2,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 37.51
+      }
+    },
+    {
+      "seed": "12348",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12348\",\n  \"label\": \"random-world-v2-12348\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12348-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12348-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 15.08\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12348",
+        "label": "random-world-v2-12348",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12348-server.log",
+        "run_log": "recordings/random-world-v2-12348-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 15.08
+      }
+    },
+    {
+      "seed": "12349",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12349\",\n  \"label\": \"random-world-v2-12349\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12349-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12349-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 14.66\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12349",
+        "label": "random-world-v2-12349",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12349-server.log",
+        "run_log": "recordings/random-world-v2-12349-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 14.66
+      }
+    },
+    {
+      "seed": "12350",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12350\",\n  \"label\": \"random-world-v2-12350\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 2,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12350-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12350-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 3,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 44.71\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12350",
+        "label": "random-world-v2-12350",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 2,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12350-server.log",
+        "run_log": "recordings/random-world-v2-12350-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 3,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 44.71
+      }
+    },
+    {
+      "seed": "12351",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12351\",\n  \"label\": \"random-world-v2-12351\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12351-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12351-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 5,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 58.45\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12351",
+        "label": "random-world-v2-12351",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12351-server.log",
+        "run_log": "recordings/random-world-v2-12351-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 5,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 58.45
+      }
+    },
+    {
+      "seed": "12352",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12352\",\n  \"label\": \"random-world-v2-12352\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12352-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12352-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 29.26\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12352",
+        "label": "random-world-v2-12352",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12352-server.log",
+        "run_log": "recordings/random-world-v2-12352-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 29.26
+      }
+    },
+    {
+      "seed": "12353",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12353\",\n  \"label\": \"random-world-v2-12353\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12353-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12353-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 92.26\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12353",
+        "label": "random-world-v2-12353",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12353-server.log",
+        "run_log": "recordings/random-world-v2-12353-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 92.26
+      }
+    },
+    {
+      "seed": "12354",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12354\",\n  \"label\": \"random-world-v2-12354\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12354-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12354-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 3,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 46.31\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12354",
+        "label": "random-world-v2-12354",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12354-server.log",
+        "run_log": "recordings/random-world-v2-12354-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 3,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 46.31
+      }
+    },
+    {
+      "seed": "12355",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12355\",\n  \"label\": \"random-world-v2-12355\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12355-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12355-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 16.16\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12355",
+        "label": "random-world-v2-12355",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12355-server.log",
+        "run_log": "recordings/random-world-v2-12355-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 16.16
+      }
+    },
+    {
+      "seed": "12356",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12356\",\n  \"label\": \"random-world-v2-12356\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 2,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12356-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12356-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 3,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 46.23\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12356",
+        "label": "random-world-v2-12356",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 2,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12356-server.log",
+        "run_log": "recordings/random-world-v2-12356-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 3,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 46.23
+      }
+    },
+    {
+      "seed": "12357",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12357\",\n  \"label\": \"random-world-v2-12357\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12357-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12357-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 19.17\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12357",
+        "label": "random-world-v2-12357",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12357-server.log",
+        "run_log": "recordings/random-world-v2-12357-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 19.17
+      }
+    },
+    {
+      "seed": "12358",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12358\",\n  \"label\": \"random-world-v2-12358\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12358-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12358-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 1,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 45.47\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12358",
+        "label": "random-world-v2-12358",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12358-server.log",
+        "run_log": "recordings/random-world-v2-12358-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 1,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 45.47
+      }
+    },
+    {
+      "seed": "12359",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12359\",\n  \"label\": \"random-world-v2-12359\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12359-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12359-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 24.01\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12359",
+        "label": "random-world-v2-12359",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12359-server.log",
+        "run_log": "recordings/random-world-v2-12359-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 24.01
+      }
+    },
+    {
+      "seed": "12360",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12360\",\n  \"label\": \"random-world-v2-12360\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12360-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12360-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 2,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 46.8\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12360",
+        "label": "random-world-v2-12360",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12360-server.log",
+        "run_log": "recordings/random-world-v2-12360-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 2,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 46.8
+      }
+    },
+    {
+      "seed": "12361",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12361\",\n  \"label\": \"random-world-v2-12361\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12361-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12361-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 21.92\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12361",
+        "label": "random-world-v2-12361",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12361-server.log",
+        "run_log": "recordings/random-world-v2-12361-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 21.92
+      }
+    },
+    {
+      "seed": "12362",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12362\",\n  \"label\": \"random-world-v2-12362\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12362-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12362-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 20.78\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12362",
+        "label": "random-world-v2-12362",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12362-server.log",
+        "run_log": "recordings/random-world-v2-12362-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 20.78
+      }
+    },
+    {
+      "seed": "12363",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12363\",\n  \"label\": \"random-world-v2-12363\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12363-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12363-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 1,\n  \"spawn_screening_nearby_tree_initial\": false,\n  \"duration_seconds\": 35.85\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12363",
+        "label": "random-world-v2-12363",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12363-server.log",
+        "run_log": "recordings/random-world-v2-12363-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 1,
+        "spawn_screening_nearby_tree_initial": false,
+        "duration_seconds": 35.85
+      }
+    },
+    {
+      "seed": "12364",
+      "returncode": 0,
+      "stdout": "{\n  \"seed\": \"12364\",\n  \"label\": \"random-world-v2-12364\",\n  \"task_preset\": \"short-random\",\n  \"mode\": \"direct\",\n  \"fallback_to_agent\": true,\n  \"timed_out\": false,\n  \"timeout_seconds\": 300,\n  \"attempt\": 1,\n  \"max_attempts\": 3,\n  \"tasks\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"completed\": [\n    \"Mine 1 wood log\",\n    \"Craft 1 crafting_table\"\n  ],\n  \"failed\": [],\n  \"success\": true,\n  \"server_log\": \"recordings/random-world-v2-12364-server.log\",\n  \"run_log\": \"recordings/random-world-v2-12364-run.log\",\n  \"returncode\": 0,\n  \"interrupted\": false,\n  \"failed_task\": null,\n  \"failure_reason\": null,\n  \"failure_phase\": \"completed\",\n  \"used_fallback_on_tasks\": [],\n  \"fallback_events\": [],\n  \"task_outcomes\": [\n    {\n      \"task\": \"Mine 1 wood log\",\n      \"success\": true,\n      \"error\": null\n    },\n    {\n      \"task\": \"Craft 1 crafting_table\",\n      \"success\": true,\n      \"error\": null\n    }\n  ],\n  \"fallback_count\": 0,\n  \"spawn_screening_required\": true,\n  \"spawn_screening_success\": true,\n  \"spawn_screening_attempts\": 0,\n  \"spawn_screening_nearby_tree_initial\": true,\n  \"duration_seconds\": 20.49\n}\n",
+      "stderr": "",
+      "result": {
+        "seed": "12364",
+        "label": "random-world-v2-12364",
+        "task_preset": "short-random",
+        "mode": "direct",
+        "fallback_to_agent": true,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "attempt": 1,
+        "max_attempts": 3,
+        "tasks": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "completed": [
+          "Mine 1 wood log",
+          "Craft 1 crafting_table"
+        ],
+        "failed": [],
+        "success": true,
+        "server_log": "recordings/random-world-v2-12364-server.log",
+        "run_log": "recordings/random-world-v2-12364-run.log",
+        "returncode": 0,
+        "interrupted": false,
+        "failed_task": null,
+        "failure_reason": null,
+        "failure_phase": "completed",
+        "used_fallback_on_tasks": [],
+        "fallback_events": [],
+        "task_outcomes": [
+          {
+            "task": "Mine 1 wood log",
+            "success": true,
+            "error": null
+          },
+          {
+            "task": "Craft 1 crafting_table",
+            "success": true,
+            "error": null
+          }
+        ],
+        "fallback_count": 0,
+        "spawn_screening_required": true,
+        "spawn_screening_success": true,
+        "spawn_screening_attempts": 0,
+        "spawn_screening_nearby_tree_initial": true,
+        "duration_seconds": 20.49
+      }
+    }
+  ]
+}

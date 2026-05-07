@@ -33,7 +33,16 @@ SHORT_RANDOM_WORLD_TASKS = [
 LONG_RANDOM_WORLD_TASKS = [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
+    "Mine 1 wood log",
     "Craft 4 sticks",
+]
+WOODPICK_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Mine 1 wood log",
+    "Craft 4 sticks",
+    "Mine 1 wood log",
+    "Craft 1 wooden_pickaxe",
 ]
 
 
@@ -168,7 +177,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--task-preset",
-        choices=("default", "short-random", "long-random"),
+        choices=("default", "short-random", "long-random", "woodpick-random"),
         help="Optional built-in task preset",
     )
     parser.add_argument(
@@ -242,6 +251,8 @@ def main() -> None:
         args.tasks = SHORT_RANDOM_WORLD_TASKS.copy()
     elif args.task_preset == "long-random":
         args.tasks = LONG_RANDOM_WORLD_TASKS.copy()
+    elif args.task_preset == "woodpick-random":
+        args.tasks = WOODPICK_RANDOM_WORLD_TASKS.copy()
     demo_arena = args.demo_arena
     if demo_arena is None:
         demo_arena = args.world_type == "minecraft:flat"
@@ -250,7 +261,9 @@ def main() -> None:
     python_executable = resolve_python(root)
     ready_file = root / ".demo_server" / "ready.json"
     server_root = root / ".demo_server"
-    if args.world_type == "minecraft:normal" and (args.demo_arena is False or args.task_preset in {"short-random", "long-random"}):
+    if args.world_type == "minecraft:normal" and (
+        not demo_arena or args.task_preset in {"short-random", "long-random", "woodpick-random"}
+    ):
         server_root = root / ".demo_server_random_recording"
         ready_file = server_root / "ready.json"
     output_path = (root / args.output).resolve()
@@ -351,6 +364,8 @@ def main() -> None:
                     str(args.wait_timeout),
                     "--page-settle-seconds",
                     str(args.page_settle_seconds),
+                    "--sample-crop-top",
+                    str(args.crop_top),
                     "--stop-when-file-exists",
                     str(done_file),
                     "--display",

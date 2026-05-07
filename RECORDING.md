@@ -86,7 +86,17 @@ There is also an exploratory longer preset:
 
 1. `Mine 1 wood log`
 2. `Craft 1 crafting_table`
-3. `Craft 4 sticks`
+3. `Mine 1 wood log`
+4. `Craft 4 sticks`
+
+There is now also a dedicated random-world wooden-pickaxe preset:
+
+1. `Mine 1 wood log`
+2. `Craft 1 crafting_table`
+3. `Mine 1 wood log`
+4. `Craft 4 sticks`
+5. `Mine 1 wood log`
+6. `Craft 1 wooden_pickaxe`
 
 Current example:
 
@@ -96,17 +106,24 @@ Current example:
 
 `record_demo_pipeline.py` now supports `--max-attempts` so random-world recordings can retry with a fresh world when spawn screening or early run setup fails. This avoids keeping a misleading partial recording from a failed first attempt.
 
+`capture_viewer.py` now also waits for non-black rendered frames on the Xvfb display before starting `ffmpeg`. That removes the old short-demo startup black screen that happened when the browser window existed but the prismarine viewer had not drawn yet.
+
 To validate random-world capability without recording video:
 
 ```bash
 ./venv/bin/python validate_random_world.py --mode direct --fallback-to-agent --seed 12345
-./venv/bin/python benchmark_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350
-./venv/bin/python benchmark_random_world.py --task-preset long-random --mode direct --fallback-to-agent --seeds 12345 12346 12347
+./venv/bin/python benchmark_random_world.py --task-preset short-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350 12351 12352 12353 12354 12355 12356 12357 12358 12359 12360 12361 12362 12363 12364
+./venv/bin/python benchmark_random_world.py --task-preset long-random --mode direct --fallback-to-agent --seeds 12345 12346 12347 12348 12349 12350 12351 12352 12353 12354
+./venv/bin/python validate_random_world.py --task-preset woodpick-random --mode direct --fallback-to-agent --seed 12346
 ```
 
-The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-6seeds.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12350` for the two-task baseline.
+The current short-chain benchmark snapshot is written to `recordings/random-world-benchmark-20seeds-v2.json`. The latest rerun in this workspace succeeded on all sampled seeds `12345` through `12364` for the two-task baseline, with `total_fallback_count: 0` and `average_run_duration_seconds: 35.657`.
 
-The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark.json`. The latest rerun succeeded on `1/3` sampled seeds for the three-task `long-random` chain, so that path should still be treated as an exploratory baseline rather than a stable benchmark.
+The current long-chain benchmark snapshot is written to `recordings/random-world-long-benchmark-10seeds-v2.json`. The latest rerun succeeded on all sampled seeds `12345` through `12354` for the four-task `long-random` chain, with `total_fallback_count: 0` and `average_run_duration_seconds: 39.078`.
+
+The current wooden-pickaxe validation snapshot is `recordings/random-world-woodpick-12346-v2.json`. On the current seed-`12346` verification run, the six-task `woodpick-random` chain completed in `64.53s` with `fallback_count: 0`.
+
+The validation JSON written by `validate_random_world.py` now carries run-level observability fields including `failed_task`, `failure_reason`, `failure_phase`, `used_fallback_on_tasks`, `fallback_events`, `task_outcomes`, `fallback_count`, `spawn_screening_required`, `spawn_screening_success`, `spawn_screening_attempts`, `spawn_screening_nearby_tree_initial`, and `duration_seconds`.
 
 ## Prismarine Viewer Headless MP4
 
@@ -126,6 +143,8 @@ This is feasible in the current environment because it already has:
 - a Chromium-based browser
 - `Xvfb`
 - `ffmpeg`
+
+The current checked-in random-world recordings `recordings/random-world-demo.mp4` and `recordings/random-world-long-demo.mp4` were regenerated with this path and passed `ffmpeg -vf blackdetect` without reporting black segments.
 
 ## OS-Level Screen Recording
 

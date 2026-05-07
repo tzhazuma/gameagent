@@ -1,0 +1,76 @@
+{
+  "seed": "12346",
+  "label": "random-world-woodpick-12346-v2",
+  "task_preset": "woodpick-random",
+  "mode": "direct",
+  "fallback_to_agent": true,
+  "timed_out": false,
+  "timeout_seconds": 900,
+  "attempt": 1,
+  "max_attempts": 3,
+  "tasks": [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Mine 1 wood log",
+    "Craft 4 sticks",
+    "Mine 1 wood log",
+    "Craft 1 wooden_pickaxe"
+  ],
+  "completed": [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Mine 1 wood log",
+    "Craft 4 sticks",
+    "Mine 1 wood log",
+    "Craft 1 wooden_pickaxe"
+  ],
+  "failed": [],
+  "success": true,
+  "server_log": "recordings/random-world-woodpick-12346-v2-server.log",
+  "run_log": "recordings/random-world-woodpick-12346-v2-run.log",
+  "returncode": 0,
+  "interrupted": false,
+  "failed_task": null,
+  "failure_reason": null,
+  "failure_phase": "completed",
+  "used_fallback_on_tasks": [],
+  "fallback_events": [],
+  "task_outcomes": [
+    {
+      "task": "Mine 1 wood log",
+      "success": true,
+      "error": null
+    },
+    {
+      "task": "Craft 1 crafting_table",
+      "success": true,
+      "error": null
+    },
+    {
+      "task": "Mine 1 wood log",
+      "success": true,
+      "error": null
+    },
+    {
+      "task": "Craft 4 sticks",
+      "success": true,
+      "error": null
+    },
+    {
+      "task": "Mine 1 wood log",
+      "success": true,
+      "error": null
+    },
+    {
+      "task": "Craft 1 wooden_pickaxe",
+      "success": true,
+      "error": null
+    }
+  ],
+  "fallback_count": 0,
+  "spawn_screening_required": true,
+  "spawn_screening_success": true,
+  "spawn_screening_attempts": 1,
+  "spawn_screening_nearby_tree_initial": false,
+  "duration_seconds": 64.53
+}

@@ -20,12 +20,75 @@ SHORT_RANDOM_WORLD_TASKS = [
 LONG_RANDOM_WORLD_TASKS = [
     "Mine 1 wood log",
     "Craft 1 crafting_table",
+    "Mine 1 wood log",
     "Craft 4 sticks",
+]
+WOODPICK_RANDOM_WORLD_TASKS = [
+    "Mine 1 wood log",
+    "Craft 1 crafting_table",
+    "Mine 1 wood log",
+    "Craft 4 sticks",
+    "Mine 1 wood log",
+    "Craft 1 wooden_pickaxe",
 ]
 TASK_PRESETS = {
     "short-random": SHORT_RANDOM_WORLD_TASKS,
     "long-random": LONG_RANDOM_WORLD_TASKS,
+    "woodpick-random": WOODPICK_RANDOM_WORLD_TASKS,
 }
+
+
+def classify_failure_phase(tasks: list[str], completed: list[str], failed: list[str], error: str | None) -> str:
+    if error == "server_ready_timeout":
+        return "server"
+    if failed:
+        failed_task = failed[0]
+        failed_index = len(completed)
+        if failed_index == 0:
+            if error and "spawn" in error:
+                return "spawn"
+            return "task_1"
+        if failed_task == "Mine 1 wood log" and failed_index == 2:
+            return "mine_log_second"
+        if failed_task == "Mine 1 wood log" and failed_index == 4:
+            return "mine_log_third"
+        if failed_task == "Mine 1 wood log":
+            return "mine_log"
+        if failed_task == "Craft 1 crafting_table":
+            return "craft_table"
+        if failed_task == "Craft 4 sticks":
+            return "craft_sticks"
+        if failed_task == "Craft 1 wooden_pickaxe":
+            return "craft_wooden_pickaxe"
+        return failed_task.replace(" ", "_").lower()
+    if error and "spawn" in error:
+        return "spawn"
+    if len(completed) == len(tasks):
+        return "completed"
+    return "unknown"
+
+
+def summarize_metrics(result: dict, tasks: list[str]) -> dict:
+    completed = result.get("completed", [])
+    failed = result.get("failed", [])
+    error = result.get("error")
+    failure_reason = result.get("failure_reason")
+    if failure_reason is None and error is not None:
+        failure_reason = error
+    return {
+        "failed_task": failed[0] if failed else None,
+        "failure_reason": failure_reason,
+        "failure_phase": classify_failure_phase(tasks, completed, failed, error),
+        "used_fallback_on_tasks": result.get("used_fallback_on_tasks", []),
+        "fallback_events": result.get("fallback_events", []),
+        "task_outcomes": result.get("task_outcomes", []),
+        "fallback_count": int(result.get("fallback_count", 0) or 0),
+        "spawn_screening_required": bool(result.get("spawn_screening_required", False)),
+        "spawn_screening_success": bool(result.get("spawn_screening_success", False)),
+        "spawn_screening_attempts": int(result.get("spawn_screening_attempts", 0) or 0),
+        "spawn_screening_nearby_tree_initial": bool(result.get("spawn_screening_nearby_tree_initial", False)),
+        "duration_seconds": float(result.get("duration_seconds", 0) or 0),
+    }
 
 
 def resolve_python(root: Path) -> str:
@@ -77,6 +140,12 @@ def load_run_result(
     else:
         result = {}
 
+    extra_metrics = {
+        key: value
+        for key, value in result.items()
+        if key not in {"completed", "failed", "error", "interrupted"}
+    }
+
     completed = result.get("completed", [])
     failed = result.get("failed", [])
     if not isinstance(completed, list):
@@ -102,6 +171,7 @@ def load_run_result(
         "failed": failed,
         "error": error,
         "interrupted": interrupted,
+        **extra_metrics,
     }
 
 
@@ -233,6 +303,22 @@ def main() -> None:
                     "run_log": str(run_log.relative_to(root)),
                     "error": "server_ready_timeout",
                 }
+                final_summary.update(
+                    {
+                        "failed_task": tasks[0],
+                        "failure_reason": "server_ready_timeout",
+                        "failure_phase": "server",
+                        "used_fallback_on_tasks": [],
+                        "fallback_events": [],
+                        "task_outcomes": [],
+                        "fallback_count": 0,
+                        "spawn_screening_required": False,
+                        "spawn_screening_success": False,
+                        "spawn_screening_attempts": 0,
+                        "spawn_screening_nearby_tree_initial": False,
+                        "duration_seconds": 0.0,
+                    }
+                )
                 if attempt == args.max_attempts:
                     break
                 continue
@@ -303,6 +389,7 @@ def main() -> None:
             }
             if result.get("error"):
                 final_summary["error"] = result["error"]
+            final_summary.update(summarize_metrics(result, tasks))
             if success or (failed and failed[0] != tasks[0]) or attempt == args.max_attempts:
                 break
         finally:
@@ -328,6 +415,22 @@ def main() -> None:
             "server_log": str(server_log.relative_to(root)),
             "run_log": str(run_log.relative_to(root)),
         }
+        final_summary.update(
+            {
+                "failed_task": tasks[0],
+                "failure_reason": None,
+                "failure_phase": "task_1",
+                "used_fallback_on_tasks": [],
+                "fallback_events": [],
+                "task_outcomes": [],
+                "fallback_count": 0,
+                "spawn_screening_required": False,
+                "spawn_screening_success": False,
+                "spawn_screening_attempts": 0,
+                "spawn_screening_nearby_tree_initial": False,
+                "duration_seconds": 0.0,
+            }
+        )
     if args.output_json:
         output_path = (root / args.output_json).resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
