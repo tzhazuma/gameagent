@@ -3,7 +3,13 @@ from pathlib import Path
 
 from benchmark_random_world import resolve_benchmark_layout, summarize_results
 from capture_viewer import is_rendered_viewer_ready
-from record_demo_pipeline import resolve_recording_layout, resolve_requested_tasks, uses_random_world_server
+from record_demo_pipeline import (
+    resolve_recording_layout,
+    resolve_requested_tasks,
+    resolve_viewer_camera_mode,
+    should_draw_viewer_path,
+    uses_random_world_server,
+)
 from validate_random_world import classify_failure_phase, resolve_validation_layout, summarize_metrics
 
 
@@ -96,6 +102,16 @@ class RecordingLayoutTests(unittest.TestCase):
         self.assertEqual(ckpt_path, root / "ckpt_recordings_random_world_demo")
         self.assertEqual(server_root, root / ".demo_server_random_recordings_random_world_demo")
         self.assertEqual(ready_file, server_root / "ready.json")
+
+    def test_resolve_viewer_camera_mode_prefers_explicit_first_person_flag(self) -> None:
+        self.assertEqual(resolve_viewer_camera_mode(None, False), "orbit")
+        self.assertEqual(resolve_viewer_camera_mode("close-follow", False), "close-follow")
+        self.assertEqual(resolve_viewer_camera_mode("close-follow", True), "first-person")
+
+    def test_close_follow_recordings_disable_path_overlay(self) -> None:
+        self.assertTrue(should_draw_viewer_path("orbit"))
+        self.assertFalse(should_draw_viewer_path("close-follow"))
+        self.assertFalse(should_draw_viewer_path("first-person"))
 
 
 class ValidationAndBenchmarkLayoutTests(unittest.TestCase):

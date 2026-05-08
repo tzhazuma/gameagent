@@ -103,10 +103,12 @@ There is now also a dedicated random-world wooden-pickaxe preset:
 Current example:
 
 ```bash
-./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset long-random --mode direct --fallback-to-agent --seed 12346 --max-attempts 3 --output recordings/random-world-long-demo.mp4
+./venv/bin/python record_demo_pipeline.py --world-type minecraft:normal --no-demo-arena --task-preset long-random --mode direct --fallback-to-agent --seed 12346 --max-attempts 6 --viewer-camera-mode close-follow --output recordings/random-world-long-demo.mp4
 ```
 
 `record_demo_pipeline.py` now supports `--max-attempts` so random-world recordings can retry with a fresh world when spawn screening or early run setup fails. This avoids keeping a misleading partial recording from a failed first attempt.
+
+For the long random-world demo specifically, `--viewer-camera-mode close-follow` is now the recommended setting because the default third-person prismarine viewer can drift into a high aerial camera, while literal `--viewer-first-person` tends to bury the camera inside spruce leaves. The close-follow camera stays attached to the bot's yaw and pitch but sits a little behind the bot so block interactions remain readable.
 
 For isolated local smoke runs, you can also override the default ports explicitly:
 
@@ -124,9 +126,10 @@ make validate-random-woodpick
 make benchmark-random-world
 make verify-random-world
 make record-random-short-smoke
+make record-random-long-close-follow
 ```
 
-`capture_viewer.py` now also waits for non-black rendered frames on the Xvfb display before starting `ffmpeg`. That removes the old short-demo startup black screen that happened when the browser window existed but the prismarine viewer had not drawn yet.
+`capture_viewer.py` now also waits for non-black rendered frames on the Xvfb display before starting `ffmpeg`, and it suppresses the X cursor from recorded frames. That removes the old short-demo startup black screen and keeps the published captures free of the desktop mouse pointer.
 
 To validate random-world capability without recording video:
 

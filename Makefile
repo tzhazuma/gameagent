@@ -31,7 +31,14 @@ SHORT_SMOKE_MC_PORT ?= 25573
 SHORT_SMOKE_VIEWER_PORT ?= 3008
 SHORT_SMOKE_BRIDGE_PORT ?= 3003
 
-.PHONY: test verify-random-world validate-random-short validate-random-woodpick benchmark-random-short benchmark-random-long benchmark-random-world refresh-random-world record-random-short-smoke
+LONG_DEMO_OUTPUT ?= recordings/random-world-long-demo.mp4
+LONG_DEMO_SEED ?= 12346
+LONG_DEMO_MC_PORT ?= 25568
+LONG_DEMO_VIEWER_PORT ?= 3009
+LONG_DEMO_BRIDGE_PORT ?= 3006
+LONG_DEMO_MAX_ATTEMPTS ?= 6
+
+.PHONY: test verify-random-world validate-random-short validate-random-woodpick benchmark-random-short benchmark-random-long benchmark-random-world refresh-random-world record-random-short-smoke record-random-long-close-follow
 
 test:
 	python -m unittest discover -s tests -p "test_*.py"
@@ -106,3 +113,18 @@ record-random-short-smoke:
 		--viewer-port $(SHORT_SMOKE_VIEWER_PORT) \
 		--bridge-port $(SHORT_SMOKE_BRIDGE_PORT) \
 		--output $(SHORT_SMOKE_OUTPUT)
+
+record-random-long-close-follow:
+	$(PYTHON) record_demo_pipeline.py \
+		--world-type minecraft:normal \
+		--no-demo-arena \
+		--task-preset long-random \
+		--mode direct \
+		--fallback-to-agent \
+		--seed $(LONG_DEMO_SEED) \
+		--max-attempts $(LONG_DEMO_MAX_ATTEMPTS) \
+		--mc-port $(LONG_DEMO_MC_PORT) \
+		--viewer-port $(LONG_DEMO_VIEWER_PORT) \
+		--bridge-port $(LONG_DEMO_BRIDGE_PORT) \
+		--viewer-camera-mode close-follow \
+		--output $(LONG_DEMO_OUTPUT)

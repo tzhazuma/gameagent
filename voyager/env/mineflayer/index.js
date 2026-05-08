@@ -133,7 +133,12 @@ app.post("/start", (req, res) => {
         const pvp = require("mineflayer-pvp").plugin;
         const minecraftHawkEye = require("minecrafthawkeye").default;
         const viewerPort = Number(req.body.viewerPort || process.env.VOYAGER_VIEWER_PORT || 0);
-        const viewerFirstPerson = Boolean(req.body.viewerFirstPerson);
+        const viewerFirstPerson = req.body.viewerFirstPerson !== undefined
+            ? Boolean(req.body.viewerFirstPerson)
+            : process.env.VOYAGER_VIEWER_FIRST_PERSON === "1";
+        const viewerCameraMode = req.body.viewerCameraMode
+            || process.env.VOYAGER_VIEWER_CAMERA_MODE
+            || (viewerFirstPerson ? "first-person" : "orbit");
         const viewerDrawPath = req.body.viewerDrawPath !== false;
         console.log("loading plugins");
         activeBot.loadPlugin(pathfinder);
@@ -144,11 +149,12 @@ app.post("/start", (req, res) => {
         console.log("plugins loaded");
 
         if (viewerPort > 0) {
-            const mineflayerViewer = require("prismarine-viewer").mineflayer;
+            const mineflayerViewer = require("./lib/viewer_server");
             console.log(`starting prismarine viewer on port ${viewerPort}`);
             mineflayerViewer(activeBot, {
                 port: viewerPort,
                 firstPerson: viewerFirstPerson,
+                cameraMode: viewerCameraMode,
             });
             if (viewerDrawPath) {
                 const path = [activeBot.entity.position.clone()];

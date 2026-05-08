@@ -35,6 +35,8 @@ DEFAULT_TASKS = [
     "Craft 1 furnace",
 ]
 
+VIEWER_CAMERA_MODES = ("orbit", "first-person", "close-follow")
+
 
 def resolve_python(root: Path) -> str:
     venv_python = root / "venv" / "bin" / "python"
@@ -70,6 +72,19 @@ def resolve_requested_tasks(tasks: list[str], task_preset: str | None) -> list[s
     if task_preset and task_preset != "default":
         return get_random_world_tasks(task_preset)
     return list(tasks)
+
+
+def resolve_viewer_camera_mode(
+    viewer_camera_mode: str | None,
+    viewer_first_person: bool,
+) -> str:
+    if viewer_first_person:
+        return "first-person"
+    return viewer_camera_mode or "orbit"
+
+
+def should_draw_viewer_path(viewer_camera_mode: str) -> bool:
+    return viewer_camera_mode == "orbit"
 
 
 def uses_random_world_server(world_type: str, demo_arena: bool, task_preset: str | None) -> bool:
@@ -130,6 +145,16 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=3007,
         help="Prismarine viewer port",
+    )
+    parser.add_argument(
+        "--viewer-first-person",
+        action="store_true",
+        help="Alias for --viewer-camera-mode first-person",
+    )
+    parser.add_argument(
+        "--viewer-camera-mode",
+        choices=VIEWER_CAMERA_MODES,
+        help="Camera mode for the prismarine viewer recording",
     )
     parser.add_argument(
         "--mc-port",
@@ -311,6 +336,10 @@ def main() -> None:
     args = build_parser().parse_args()
     clear_proxy_env()
     args.tasks = resolve_requested_tasks(args.tasks, args.task_preset)
+    viewer_camera_mode = resolve_viewer_camera_mode(
+        args.viewer_camera_mode,
+        args.viewer_first_person,
+    )
     demo_arena = args.demo_arena
     if demo_arena is None:
         demo_arena = args.world_type == "minecraft:flat"
@@ -380,7 +409,12 @@ def main() -> None:
 
             env = dict(os.environ)
             env["VOYAGER_VIEWER_PORT"] = str(args.viewer_port)
-            env["VOYAGER_VIEWER_DRAW_PATH"] = "1"
+            env["VOYAGER_VIEWER_DRAW_PATH"] = "1" if should_draw_viewer_path(viewer_camera_mode) else "0"
+            env["VOYAGER_VIEWER_CAMERA_MODE"] = viewer_camera_mode
+            if viewer_camera_mode == "first-person":
+                env["VOYAGER_VIEWER_FIRST_PERSON"] = "1"
+            else:
+                env.pop("VOYAGER_VIEWER_FIRST_PERSON", None)
 
             with open(run_log, "w", encoding="utf-8") as run_handle:
                 run_proc = subprocess.Popen(

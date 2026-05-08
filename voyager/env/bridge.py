@@ -53,6 +53,7 @@ class VoyagerEnv(gym.Env):
         viewer_port = os.environ.get("VOYAGER_VIEWER_PORT")
         self.viewer_port = int(viewer_port) if viewer_port else None
         self.viewer_first_person = os.environ.get("VOYAGER_VIEWER_FIRST_PERSON") == "1"
+        self.viewer_camera_mode = os.environ.get("VOYAGER_VIEWER_CAMERA_MODE")
         self.viewer_draw_path = os.environ.get("VOYAGER_VIEWER_DRAW_PATH", "1") != "0"
 
     def _post(self, path, payload=None, timeout=None):
@@ -197,6 +198,7 @@ class VoyagerEnv(gym.Env):
             "position": options.get("position", None),
             "viewerPort": self.viewer_port,
             "viewerFirstPerson": self.viewer_first_person,
+            "viewerCameraMode": self.viewer_camera_mode,
             "viewerDrawPath": self.viewer_draw_path,
         }
 

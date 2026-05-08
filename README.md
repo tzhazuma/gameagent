@@ -49,6 +49,7 @@ make validate-random-woodpick
 make benchmark-random-world
 make verify-random-world
 make record-random-short-smoke
+make record-random-long-close-follow
 ```
 
 The current short-chain benchmark artifact is `recordings/random-world-benchmark-20seeds-v2.json`. It captures the latest rerun across seeds `12345` through `12364`, where all 20 seeds completed the two-task random-world chain successfully with `direct --fallback-to-agent`. Under the current `make benchmark-random-short` path, each seed gets up to 6 fresh-world attempts to smooth spawn-screening variance; the latest rerun landed at `average_attempt: 1.15` and `average_run_duration_seconds: 27.6285`. The older `recordings/random-world-benchmark.json` and `recordings/random-world-benchmark-6seeds.json` snapshots have been retired.
@@ -57,7 +58,7 @@ The current longer-chain benchmark artifact is `recordings/random-world-long-ben
 
 The dedicated wooden-pickaxe random-world validation artifact is `recordings/random-world-woodpick-12346-v2.json`. It records the current successful seed-`12346` verification run for the six-task chain `Mine 1 wood log -> Craft 1 crafting_table -> Mine 1 wood log -> Craft 4 sticks -> Mine 1 wood log -> Craft 1 wooden_pickaxe`, with `duration_seconds: 68.73`. Exact fallback and observability values live in the JSON artifact.
 
-For random-world recording, the pipeline supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact. `record_demo_pipeline.py` also derives isolated default `--ckpt-dir` and `--server-root` paths from `--output`, so smoke recordings do not reuse shared state unless you opt into that explicitly. The current `recordings/random-world-demo.mp4` and `recordings/random-world-long-demo.mp4` were both regenerated with the render-readiness gate and can be rechecked with `./venv/bin/python verify_random_world_artifacts.py`.
+For random-world recording, the pipeline supports bounded fresh-world retries through `--max-attempts` so a failed spawn-screening attempt does not leave only a partial `.raw.mp4` artifact. `record_demo_pipeline.py` also derives isolated default `--ckpt-dir` and `--server-root` paths from `--output`, so smoke recordings do not reuse shared state unless you opt into that explicitly. It now supports both literal `--viewer-first-person` and the less fragile `--viewer-camera-mode close-follow` mode; the recommended path for the long random-world demo is `make record-random-long-close-follow`, which keeps the camera attached to the bot's yaw and pitch without drifting back up into an aerial view or disappearing into leaf blocks. The checked-in random-world videos can be rechecked with `./venv/bin/python verify_random_world_artifacts.py`.
 
 The validation JSONs now include run-level observability fields such as `failed_task`, `failure_reason`, `failure_phase`, `used_fallback_on_tasks`, `fallback_events`, `task_outcomes`, `fallback_count`, `spawn_screening_required`, `spawn_screening_success`, `spawn_screening_attempts`, `spawn_screening_nearby_tree_initial`, and `duration_seconds`.
 
